@@ -8,9 +8,14 @@
   "scripts": {
     "build": "tsc",
     "build:watch": "npm run build -- --watch",
-    "lint": "tslint --project tsconfig.json --config tslint.json"
+    "lint": "tslint --project tsconfig.json --config tslint.json",
+    "test:unit": "NODE_ENV=test jest unit/",
+    "test:unit:watch": "npm run test:unit -- --watch"
   },
   "devDependencies": {
+    "@types/jest": "^23.3.1",
+    "jest": "^23.5.0",
+    "ts-jest": "^23.1.4",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "typescript": "^3.0.1"
