@@ -1,0 +1,16 @@
+{
+  "name": "feature-toggle",
+  "version": "0.0.0",
+  "main": "src/index.ts",
+  "author": "William Calderipe <wcalderipe@gmail.com>",
+  "license": "ISC",
+  "keywords": [],
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "npm run build -- --watch"
+  },
+  "devDependencies": {
+    "ts-node": "^7.0.1",
+    "typescript": "^3.0.1"
+  }
+}
