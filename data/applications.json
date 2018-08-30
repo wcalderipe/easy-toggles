@@ -1,0 +1,15 @@
+{
+  "applications": [
+    {
+      "name": "DummyApplication",
+      "features": [
+        {
+          "name": "newLoginForm",
+          "context": {
+            "country": ["BR", "CL", "US"]
+          }
+        }
+      ]
+    }
+  ]
+}
