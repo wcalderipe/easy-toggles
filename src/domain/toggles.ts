@@ -15,7 +15,10 @@ const toggles = (features: Feature[], given: Given): Toggles => {
 }
 
 const buildToggleTuple = (given: Given) => (feature: Feature): ToggleTuple => {
-  return [feature.name, evaluate(feature, given)]
+  return [
+    feature.name,
+    evaluate(feature, given)
+  ]
 }
 
 const fromToggleTuples = (tuples: ToggleTuple[]): Toggles => fromPairs(tuples)
