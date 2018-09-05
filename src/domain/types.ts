@@ -15,3 +15,7 @@ export interface Context {
 export interface Given {
   [key: string]: string
 }
+
+export interface Toggles {
+  [key: string]: boolean
+}
