@@ -1,27 +1,28 @@
 import { evaluate } from '../../../src/domain/evaluate'
-import { Feature, Given } from '../../../src/domain/types'
+
+import { Context, Feature } from '../../../src/domain/types'
 
 describe('evaluate', () => {
   const feature: Feature = {
-    context: {
+    criteria: {
       country: ['BR', 'CL']
     },
     name: 'newLoginForm'
   }
 
   test('returns true when given is present in context', () => {
-    const given: Given = {
+    const context: Context = {
       country: 'BR'
     }
 
-    expect(evaluate(feature, given)).toEqual(true)
+    expect(evaluate(feature, context)).toEqual(true)
   })
 
   test('returns false when given is not present in context', () => {
-    const given: Given = {
+    const context: Context = {
       country: 'US'
     }
 
-    expect(evaluate(feature, given)).toEqual(false)
+    expect(evaluate(feature, context)).toEqual(false)
   })
 })

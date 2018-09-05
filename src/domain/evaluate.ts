@@ -1,23 +1,24 @@
 import { all, contains, equals, map, pipe, toPairs } from 'ramda'
-import { Context, Feature, Given } from './types'
 
-type ContextTuple = [string, string[]]
+import { Context, Feature } from './types'
 
-const evaluate = (feature: Feature, given: Given): boolean => {
-  const { context } = feature
-  const contextPairs = toPairs(context)
+type CriteriaTuple = [string, string[]]
+
+const evaluate = (feature: Feature, context: Context): boolean => {
+  const { criteria } = feature
+  const criteriaTuples = toPairs(criteria)
 
   const isActive = pipe(
-    map(isPresent(given)),
+    map(isPresent(context)),
     all(equals(true))
-  )(contextPairs)
+  )(criteriaTuples)
 
   return isActive
 }
 
-const isPresent = (given: Given) => (context: ContextTuple): boolean => {
-  const [ key, values ] = context
-  const givenValue = given[key]
+const isPresent = (context: Context) => (criteria: CriteriaTuple): boolean => {
+  const [ key, values ] = criteria
+  const givenValue = context[key]
 
   return contains(givenValue, values)
 }

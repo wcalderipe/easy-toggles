@@ -1,23 +1,23 @@
 import { toggles } from '../../../src/domain/toggles'
 
-import { Feature, Given, Toggles } from '../../../src/domain/types'
+import { Context, Feature, Toggles } from '../../../src/domain/types'
 
 describe('toggles', () => {
   const features: Feature[] = [
     {
-      context: {
+      criteria: {
         country: ['BR', 'CL']
       },
       name: 'newLoginForm'
     },
     {
-      context: {
+      criteria: {
         country: ['AR']
       },
       name: 'requireSomething'
     }
   ]
-  const given: Given = {
+  const context: Context = {
     country: 'BR'
   }
 
@@ -27,6 +27,6 @@ describe('toggles', () => {
       requireSomething: false
     }
 
-    expect(toggles(features, given)).toEqual(expectedToggles)
+    expect(toggles(features, context)).toEqual(expectedToggles)
   })
 })

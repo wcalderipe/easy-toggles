@@ -1,23 +1,23 @@
 import { fromPairs, map, pipe } from 'ramda'
 import { evaluate } from './evaluate'
 
-import { Feature, Given, Toggles } from './types'
+import { Context, Feature, Toggles } from './types'
 
 type ToggleTuple = [string, boolean]
 
-const toggles = (features: Feature[], given: Given): Toggles => {
+const toggles = (features: Feature[], context: Context): Toggles => {
   const toggles = pipe(
-    map(buildToggleTuple(given)),
+    map(buildToggleTuple(context)),
     fromToggleTuples
   )(features)
 
   return toggles
 }
 
-const buildToggleTuple = (given: Given) => (feature: Feature): ToggleTuple => {
+const buildToggleTuple = (context: Context) => (feature: Feature): ToggleTuple => {
   return [
     feature.name,
-    evaluate(feature, given)
+    evaluate(feature, context)
   ]
 }
 

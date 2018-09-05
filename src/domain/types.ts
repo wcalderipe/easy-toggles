@@ -5,14 +5,14 @@ export interface Application {
 
 export interface Feature {
   name: string,
-  context: Context
+  criteria: Criteria
 }
 
-export interface Context {
+export interface Criteria {
   [key: string]: string[]
 }
 
-export interface Given {
+export interface Context {
   [key: string]: string
 }
 
