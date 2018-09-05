@@ -1,5 +1,6 @@
 import * as bodyParser from 'body-parser'
 import * as express from 'express'
+import { getToggles } from './router'
 
 const buildApp = (withRoutes?: (app: express.Application) => void): express.Application => {
   const app = express()
@@ -10,6 +11,8 @@ const buildApp = (withRoutes?: (app: express.Application) => void): express.Appl
   app.get('/health', (req: express.Request, res: express.Response) => {
     return res.json({ok: true})
   })
+
+  app.get('/toggles', getToggles)
 
   if (withRoutes) {
     withRoutes(app)

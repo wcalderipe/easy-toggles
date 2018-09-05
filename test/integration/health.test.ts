@@ -3,9 +3,10 @@ import * as supertest from 'supertest'
 import { app } from '../../src/app'
 
 describe('health', () => {
-  test('responds with status 200', () => {
-    return supertest(app)
+  test('responds with status 200', async () => {
+    const response = await supertest(app)
       .get('/health')
-      .expect(OK)
+
+    expect(response.status).toEqual(OK)
   })
 })
