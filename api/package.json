@@ -1,9 +1,7 @@
 {
-  "name": "feature-toggle",
+  "name": "easy-toggles-api",
   "version": "0.0.0",
-  "author": "William Calderipe <wcalderipe@gmail.com>",
   "license": "ISC",
-  "keywords": [],
   "scripts": {
     "build:watch": "npm run build -- --watch",
     "build": "tsc",
