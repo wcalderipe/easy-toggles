@@ -1,5 +1,6 @@
 import * as bodyParser from 'body-parser'
 import * as express from 'express'
+import { onError } from './middleware'
 import { getToggles } from './router'
 
 const buildApp = (withRoutes?: (app: express.Application) => void): express.Application => {
@@ -17,6 +18,8 @@ const buildApp = (withRoutes?: (app: express.Application) => void): express.Appl
   if (withRoutes) {
     withRoutes(app)
   }
+
+  app.use(onError)
 
   return app
 }

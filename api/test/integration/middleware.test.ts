@@ -1,6 +1,8 @@
 import { Application } from 'express'
+import { INTERNAL_SERVER_ERROR } from 'http-status'
 import * as supertest from 'supertest'
 import { buildApp } from '../../src/app'
+import { ApiError } from '../../src/domain/error'
 
 describe('middleware', () => {
   describe('URL encoded body', () => {
@@ -44,6 +46,46 @@ describe('middleware', () => {
         .set('Content-Type', 'text/html')
 
       expect(response.body).toEqual(expectedResponseBody)
+    })
+  })
+
+  describe('error handling', () => {
+    interface SuiteConfig {
+      error: Error | ApiError
+      expectedBody: object
+      expectedStatus: number
+    }
+
+    const suite = (config: SuiteConfig) => async () => {
+      const app = buildApp((app: Application) => {
+        app.get('/throw', () => { throw config.error })
+      })
+
+      const response = await supertest(app)
+        .get('/throw')
+
+      expect(response.status).toEqual(config.expectedStatus)
+      expect(response.body).toEqual(config.expectedBody)
+    }
+
+    describe('generic error', () => {
+      const config: SuiteConfig = {
+        error: new Error(),
+        expectedBody: { code: 'GENERIC' },
+        expectedStatus: INTERNAL_SERVER_ERROR
+      }
+
+      test('responds with proper status and contract', suite(config))
+    })
+
+    describe('api error', () => {
+      const config: SuiteConfig = {
+        error: new ApiError(),
+        expectedBody: { code: 'INTERNAL' },
+        expectedStatus: INTERNAL_SERVER_ERROR
+      }
+
+      test('responds with proper status and contract', suite(config))
     })
   })
 })
