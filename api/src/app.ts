@@ -9,7 +9,7 @@ const buildApp = (withRoutes?: (app: express.Application) => void): express.Appl
   app.use(bodyParser.json())
 
   app.get('/health', (req: express.Request, res: express.Response) => {
-    return res.json({ok: true})
+    return res.json({ up: true })
   })
 
   app.get('/toggles', getToggles)
