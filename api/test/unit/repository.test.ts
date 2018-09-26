@@ -1,6 +1,6 @@
-import { findApplicationByName } from '../../src/repository'
-
+import { ApplicationNotFound } from '../../src/domain/error'
 import { Application } from '../../src/domain/types'
+import { findApplicationByName } from '../../src/repository'
 
 describe('repository', () => {
   const fooApp: Application = {
@@ -19,9 +19,12 @@ describe('repository', () => {
     expect(findApplicationByName('FooApp', applications)).toEqual(expectedApplication)
   })
 
-  test('returns undefined when not found', () => {
+  test('throws ApplicationNotFound error', () => {
     const applications: Application[] = []
+    const findInexistentApplication = () => {
+      findApplicationByName('BananaApp', applications)
+    }
 
-    expect(findApplicationByName('BananaApp', applications)).toEqual(undefined)
+    expect(findInexistentApplication).toThrowError(ApplicationNotFound)
   })
 })

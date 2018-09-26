@@ -1,10 +1,11 @@
 // tslint:disable max-classes-per-file
 
-import { INTERNAL_SERVER_ERROR } from 'http-status'
+import { INTERNAL_SERVER_ERROR, NOT_FOUND } from 'http-status'
 
 enum ErrorCode {
-  GENERIC_ERROR = 'GENERIC',
-  API_ERROR = 'INTERNAL'
+  API_ERROR = 'INTERNAL',
+  APPLICATION_NOT_FOUND = 'APPLICATION_NOT_FOUND',
+  GENERIC_ERROR = 'GENERIC'
 }
 
 class ApiError extends Error {
@@ -19,7 +20,17 @@ class ApiError extends Error {
   }
 }
 
+class ApplicationNotFound extends ApiError {
+  constructor(message?: string) {
+    super(message)
+
+    this.code = ErrorCode.APPLICATION_NOT_FOUND
+    this.statusCode = NOT_FOUND
+  }
+}
+
 export {
   ApiError,
+  ApplicationNotFound,
   ErrorCode
 }

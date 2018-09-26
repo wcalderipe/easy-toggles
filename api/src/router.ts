@@ -28,13 +28,7 @@ const dummyApplications: Application[] = [
 const getToggles = (req: Request, res: Response) => {
   const context: Context = buildContext(req.query)
   const applicationName: string = prop('application', req.query)
-  const application: Application | undefined = findApplicationByName(applicationName, dummyApplications)
-
-  if (!application) {
-    return res.status(NOT_FOUND).json({
-      error: 'APPLICATION_NOT_FOUND'
-    })
-  }
+  const application: Application = findApplicationByName(applicationName, dummyApplications)
 
   return res.json(toggles(application.features, context))
 }

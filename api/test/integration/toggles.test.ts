@@ -1,6 +1,7 @@
 import { NOT_FOUND, OK } from 'http-status'
 import * as supertest from 'supertest'
 import { app } from '../../src/app'
+import { ErrorCode } from '../../src/domain/error'
 
 describe('toggles', () => {
   test('responds with status 200', async () => {
@@ -21,10 +22,13 @@ describe('toggles', () => {
     expect(response.body).toEqual(expectedResponseBody)
   })
 
-  test('responds with status 404 if application is not found', async () => {
-    const response = await supertest(app)
-      .get('/toggles?application=BananaApp')
+  describe('application is not found', () => {
+    test('responds with status 404 and proper error contract', async () => {
+      const response = await supertest(app)
+        .get('/toggles?application=BananaApp')
 
-    expect(response.status).toEqual(NOT_FOUND)
+      expect(response.status).toEqual(NOT_FOUND)
+      expect(response.body).toEqual({ code: ErrorCode.APPLICATION_NOT_FOUND })
+    })
   })
 })
