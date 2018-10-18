@@ -1,16 +1,18 @@
-import { ErrorRequestHandler, NextFunction, Request, Response } from 'express'
 import { INTERNAL_SERVER_ERROR } from 'http-status'
+import * as Koa from 'koa'
 import { ApiError, ErrorCode } from './domain/error'
 
-const onError = (err: ErrorRequestHandler, req: Request, res: Response, next: NextFunction) => {
-  if (!err) {
-    return next()
-  }
-
-  if (err instanceof ApiError) {
-    return res.status(err.statusCode).json({ code: err.code })
-  } else {
-    return res.status(INTERNAL_SERVER_ERROR).json({ code: ErrorCode.GENERIC_ERROR })
+const onError = async (ctx: Koa.Context, next: () => Promise<any>) => {
+  try {
+    await next()
+  } catch (err) {
+    if (err instanceof ApiError) {
+      ctx.status = err.statusCode
+      ctx.body = { code: err.code }
+    } else {
+      ctx.status = INTERNAL_SERVER_ERROR
+      ctx.body = { code: ErrorCode.GENERIC_ERROR }
+    }
   }
 }
 

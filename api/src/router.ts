@@ -1,5 +1,4 @@
-import { Request, Response } from 'express'
-import { NOT_FOUND } from 'http-status'
+import * as Koa from 'koa'
 import { omit, prop } from 'ramda'
 import { toggles } from './domain/toggles'
 import { Application, Context } from './domain/types'
@@ -25,12 +24,12 @@ const dummyApplications: Application[] = [
   }
 ]
 
-const getToggles = (req: Request, res: Response) => {
-  const context: Context = buildContext(req.query)
-  const applicationName: string = prop('application', req.query)
+const getToggles = (ctx: Koa.Context) => {
+  const context: Context = buildContext(ctx.query)
+  const applicationName: string = prop('application', ctx.query)
   const application: Application = findApplicationByName(applicationName, dummyApplications)
 
-  return res.json(toggles(application.features, context))
+  ctx.body = toggles(application.features, context)
 }
 
 const buildContext = omit(['application'])

@@ -1,25 +1,25 @@
-import * as bodyParser from 'body-parser'
-import * as express from 'express'
+import * as Koa from 'koa'
+import * as Router from 'koa-router'
 import { onError } from './middleware'
 import { getToggles } from './router'
 
-const buildApp = (withRoutes?: (app: express.Application) => void): express.Application => {
-  const app = express()
+const buildApp = (withRouter?: (router: Router) => void): Koa => {
+  const app = new Koa()
+  const router = new Router()
 
-  app.use(bodyParser.urlencoded({ extended: false }))
-  app.use(bodyParser.json())
+  router.use(onError)
 
-  app.get('/health', (req: express.Request, res: express.Response) => {
-    return res.json({ up: true })
+  router.get('/health', (ctx: Koa.Context) => {
+    ctx.body = { up: true }
   })
 
-  app.get('/toggles', getToggles)
+  router.get('/toggles', getToggles)
 
-  if (withRoutes) {
-    withRoutes(app)
+  if (withRouter) {
+    withRouter(router)
   }
 
-  app.use(onError)
+  app.use(router.routes())
 
   return app
 }
