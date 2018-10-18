@@ -1,4 +1,4 @@
-import * as Koa from 'koa'
+import { Context as KoaContext } from 'koa'
 import { omit, prop } from 'ramda'
 import { toggles } from './domain/toggles'
 import { Application, Context } from './domain/types'
@@ -24,7 +24,7 @@ const dummyApplications: Application[] = [
   }
 ]
 
-const getToggles = (ctx: Koa.Context) => {
+const getToggles = async (ctx: KoaContext) => {
   const context: Context = buildContext(ctx.query)
   const applicationName: string = prop('application', ctx.query)
   const application: Application = findApplicationByName(applicationName, dummyApplications)
@@ -34,4 +34,8 @@ const getToggles = (ctx: Koa.Context) => {
 
 const buildContext = omit(['application'])
 
-export { getToggles }
+const getHealth = async (ctx: KoaContext) => {
+  ctx.body = { up: true }
+}
+
+export { getToggles, getHealth }

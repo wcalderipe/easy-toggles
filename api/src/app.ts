@@ -1,7 +1,7 @@
 import * as Koa from 'koa'
 import * as Router from 'koa-router'
 import { onError } from './middleware'
-import { getToggles } from './router'
+import { getHealth, getToggles } from './router'
 
 const buildApp = (withRouter?: (router: Router) => void): Koa => {
   const app = new Koa()
@@ -9,10 +9,7 @@ const buildApp = (withRouter?: (router: Router) => void): Koa => {
 
   router.use(onError)
 
-  router.get('/health', (ctx: Koa.Context) => {
-    ctx.body = { up: true }
-  })
-
+  router.get('/health', getHealth)
   router.get('/toggles', getToggles)
 
   if (withRouter) {
