@@ -12,4 +12,10 @@ const findApplicationByName = (name: string, applications: Application[]): Appli
   return application
 }
 
-export { findApplicationByName }
+const saveApplication = (application: Application, applications: Application[]): Application => {
+  applications.push(application)
+
+  return application
+}
+
+export { findApplicationByName, saveApplication }

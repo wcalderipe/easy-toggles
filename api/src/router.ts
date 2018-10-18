@@ -1,8 +1,9 @@
+import { CREATED } from 'http-status'
 import { Context as KoaContext } from 'koa'
 import { omit, prop } from 'ramda'
 import { toggles } from './domain/toggles'
 import { Application, Context } from './domain/types'
-import { findApplicationByName } from './repository'
+import { findApplicationByName, saveApplication } from './repository'
 
 const dummyApplications: Application[] = [
   {
@@ -38,4 +39,12 @@ const getHealth = async (ctx: KoaContext) => {
   ctx.body = { up: true }
 }
 
-export { getToggles, getHealth }
+const postApplication = async (ctx: KoaContext) => {
+  const { body } = ctx.request
+  const application: Application =  saveApplication(body as Application, dummyApplications)
+
+  ctx.status = CREATED
+  ctx.body = application
+}
+
+export { getToggles, getHealth, postApplication }
