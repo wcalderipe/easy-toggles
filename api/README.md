@@ -1,5 +1,7 @@
 # Easy Toggles API
 
+![travis build](https://travis-ci.org/wcalderipe/easy-toggles.svg?branch=master)
+
 ## Run
 
 ```shell
