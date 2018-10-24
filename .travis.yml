@@ -6,7 +6,7 @@ services:
   - docker
 
 before_install:
-  - docker build --tag easy-toggles-api --file api/Dockerfile .
+  - docker build --tag easy-toggles-api --build-arg BUILD_CONTEXT=api/ --file api/Dockerfile api/
   - docker run --rm easy-toggles-api
   - docker ps -a
 

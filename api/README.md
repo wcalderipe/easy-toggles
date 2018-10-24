@@ -17,7 +17,10 @@ npm run test:integration
 ## Docker
 
 ```shell
-docker build --tag easy-toggles-api --file Dockerfile .
+docker build \
+  --tag easy-toggles-api \
+  --build-arg BUILD_CONTEXT=. \
+  --file Dockerfile .
 
 docker run --publish 8080:8080 --rm easy-toggles-api
 ```
