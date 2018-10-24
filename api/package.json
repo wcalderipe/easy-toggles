@@ -8,11 +8,12 @@
     "lint:fix": "tslint --project tsconfig.json --config tslint.json --fix",
     "lint": "tslint --project tsconfig.json --config tslint.json",
     "start:prod": "NODE_ENV=production node dist/src/server.js",
+    "test:ci": "NODE_ENV=test jest test/ --forceExit",
     "test:integration:watch": "npm run test:integration -- --watch",
     "test:integration": "NODE_ENV=test jest integration/",
     "test:unit:watch": "npm run test:unit -- --watch",
     "test:unit": "NODE_ENV=test jest unit/",
-    "test": "npm run test:unit && npm run test:integration"
+    "test": "NODE_ENV=test jest test/ --forceExit"
   },
   "devDependencies": {
     "@types/http-status": "^0.2.30",
