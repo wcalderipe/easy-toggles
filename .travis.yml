@@ -7,10 +7,8 @@ services:
 
 before_install:
   - docker build --tag easy-toggles-api --build-arg BUILD_CONTEXT=api/ --file api/Dockerfile api/
-  - docker run --rm easy-toggles-api
-  - docker ps -a
 
 script:
-  - npm run lint
-  - npm run test:unit
-  - npm run test:integration
+  - docker run --rm easy-toggles-api npm run lint
+  - docker run --rm easy-toggles-api npm run test:unit
+  - docker run --rm easy-toggles-api npm run test:integration
