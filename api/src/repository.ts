@@ -1,4 +1,3 @@
-import { find, propEq } from 'ramda'
 import { ApplicationNotFound } from './domain/error'
 import { Application } from './domain/types'
 import { store as memoryStore } from './store/memory'
