@@ -1,30 +1,14 @@
 import { ApplicationNotFound } from '../../src/domain/error'
-import { Application } from '../../src/domain/types'
 import { findApplicationByName } from '../../src/repository'
+import { Store } from '../../src/store/types'
 
 describe('repository', () => {
-  const fooApp: Application = {
-    features: [],
-    name: 'FooApp'
-  }
-  const barApp: Application = {
-    features: [],
-    name: 'BarApp'
-  }
-
-  test('finds application by name', () => {
-    const applications: Application[] = [fooApp, barApp]
-    const expectedApplication: Application = fooApp
-
-    expect(findApplicationByName('FooApp', applications)).toEqual(expectedApplication)
-  })
-
-  test('throws ApplicationNotFound error', () => {
-    const applications: Application[] = []
-    const findInexistentApplication = () => {
-      findApplicationByName('BananaApp', applications)
+  test('throws ApplicationNotFound error when application does not exists', async () => {
+    const fakeStore: Store = {
+      find: (query: any) => Promise.resolve([]),
+      save: (document: any) => null
     }
 
-    expect(findInexistentApplication).toThrowError(ApplicationNotFound)
+    await expect(findApplicationByName('BananaApp', fakeStore)).rejects.toThrowError(ApplicationNotFound)
   })
 })

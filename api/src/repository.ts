@@ -1,21 +1,21 @@
 import { find, propEq } from 'ramda'
 import { ApplicationNotFound } from './domain/error'
 import { Application } from './domain/types'
+import { store as memoryStore } from './store/memory'
+import { Store } from './store/types'
 
-const findApplicationByName = (name: string, applications: Application[]): Application => {
-  const application: Application | undefined = find(propEq('name', name), applications)
+const findApplicationByName = async (name: string, store: Store = memoryStore): Promise<Application> => {
+  const results = await store.find({ name })
 
-  if (!application) {
+  if (results.length === 0) {
     throw new ApplicationNotFound()
   }
 
-  return application
+  return results[0] as Application
 }
 
-const saveApplication = (application: Application, applications: Application[]): Application => {
-  applications.push(application)
-
-  return application
+const saveApplication = async (application: Application, store: Store = memoryStore): Promise<Application> => {
+  return await store.save(application) as Application
 }
 
 export { findApplicationByName, saveApplication }
