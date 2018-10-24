@@ -10,5 +10,4 @@ before_install:
 
 script:
   - docker run --rm easy-toggles-api npm run lint
-  - docker run --rm easy-toggles-api npm run test:unit
-  - docker run --rm easy-toggles-api npm run test:integration
+  - docker run --rm easy-toggles-api npm run test -- --forceExit
