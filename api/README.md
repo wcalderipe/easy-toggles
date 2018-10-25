@@ -26,3 +26,7 @@ docker build \
 
 docker run --publish 8080:8080 --rm easy-toggles-api
 ```
+
+## Endpoint
+
+See [doc/ENDPOINTS.md](https://github.com/wcalderipe/easy-toggles/blob/master/api/doc/ENDPOINTS.md)
