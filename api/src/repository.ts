@@ -1,7 +1,7 @@
 import { ApplicationNotFound } from './domain/error'
-import { Application } from './domain/types'
+import { Application } from './domain/type'
 import { store as memoryStore } from './store/memory'
-import { Store } from './store/types'
+import { Store } from './store/type'
 
 const findApplicationByName = async (name: string, store: Store = memoryStore): Promise<Application> => {
   const results = await store.find({ name })

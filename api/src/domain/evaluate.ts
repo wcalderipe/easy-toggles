@@ -1,6 +1,6 @@
 import { all, contains, equals, map, pipe, toPairs } from 'ramda'
 
-import { Context, Feature } from './types'
+import { Context, Feature } from './type'
 
 type CriteriaTuple = [string, string[]]
 

@@ -1,6 +1,5 @@
 import { evaluate } from '../../../src/domain/evaluate'
-
-import { Context, Feature } from '../../../src/domain/types'
+import { Context, Feature } from '../../../src/domain/type'
 
 describe('evaluate', () => {
   const feature: Feature = {

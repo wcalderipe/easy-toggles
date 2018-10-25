@@ -2,7 +2,7 @@ import { CREATED } from 'http-status'
 import { Context as KoaContext } from 'koa'
 import { omit, prop } from 'ramda'
 import { toggles } from './domain/toggles'
-import { Application, Context } from './domain/types'
+import { Application, Context } from './domain/type'
 import { findApplicationByName, saveApplication } from './repository'
 
 const getToggles = async (ctx: KoaContext) => {

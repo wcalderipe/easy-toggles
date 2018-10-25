@@ -1,5 +1,5 @@
 import { equals, pipe, reduce, where } from 'ramda'
-import { Store } from './types'
+import { Store } from './type'
 
 const documents: object[] = [
   {

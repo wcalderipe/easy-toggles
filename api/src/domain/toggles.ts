@@ -1,7 +1,7 @@
 import { fromPairs, map, pipe } from 'ramda'
 import { evaluate } from './evaluate'
 
-import { Context, Feature, Toggles } from './types'
+import { Context, Feature, Toggles } from './type'
 
 type ToggleTuple = [string, boolean]
 

@@ -1,6 +1,5 @@
 import { toggles } from '../../../src/domain/toggles'
-
-import { Context, Feature, Toggles } from '../../../src/domain/types'
+import { Context, Feature, Toggles } from '../../../src/domain/type'
 
 describe('toggles', () => {
   const features: Feature[] = [

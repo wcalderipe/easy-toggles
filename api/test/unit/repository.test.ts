@@ -1,6 +1,6 @@
 import { ApplicationNotFound } from '../../src/domain/error'
 import { findApplicationByName } from '../../src/repository'
-import { Store } from '../../src/store/types'
+import { Store } from '../../src/store/type'
 
 describe('repository', () => {
   test('throws ApplicationNotFound error when application does not exists', async () => {
