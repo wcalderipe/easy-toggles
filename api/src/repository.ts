@@ -17,4 +17,14 @@ const saveApplication = async (application: Application, store: Store = memorySt
   return await store.save(application) as Application
 }
 
-export { findApplicationByName, saveApplication }
+const deleteApplicationById = async (id: string, store: Store = memoryStore): Promise<boolean> => {
+  const deleteCount: number = await memoryStore.destroy({ id })
+
+  if (deleteCount === 0) {
+    throw new ApplicationNotFound()
+  }
+
+  return true
+}
+
+export { findApplicationByName, saveApplication, deleteApplicationById }

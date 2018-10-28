@@ -1,15 +1,25 @@
 import { ApplicationNotFound } from '../../src/domain/error'
-import { findApplicationByName } from '../../src/repository'
+import { deleteApplicationById, findApplicationByName } from '../../src/repository'
 import { Store } from '../../src/store/type'
 
-describe('repository', () => {
-  test('throws ApplicationNotFound error when application does not exists', async () => {
-    const fakeStore: Store = {
-      destroy: (query: any) => Promise.resolve(1),
-      find: (query: any) => Promise.resolve([]),
-      save: (document: any) => Promise.resolve(null)
-    }
+const DELETED_APPLICATIONS = 0
 
-    await expect(findApplicationByName('BananaApp', fakeStore)).rejects.toThrowError(ApplicationNotFound)
+describe('repository', () => {
+  const fakeStore: Store = {
+    destroy: (query: any) => Promise.resolve(DELETED_APPLICATIONS),
+    find: (query: any) => Promise.resolve([]),
+    save: (document: any) => Promise.resolve(null)
+  }
+
+  describe('findApplicationByName', () => {
+    test('throws ApplicationNotFound error when application does not exists', async () => {
+      await expect(findApplicationByName('BananaApp', fakeStore)).rejects.toThrowError(ApplicationNotFound)
+    })
+  })
+
+  describe('deleteApplicationById', async () => {
+    test('throws ApplicationNotFound error when application does not exists', async () => {
+      await expect(deleteApplicationById('app-fake-id', fakeStore)).rejects.toThrowError(ApplicationNotFound)
+    })
   })
 })

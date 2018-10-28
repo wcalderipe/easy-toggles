@@ -3,7 +3,7 @@ import { Context as KoaContext } from 'koa'
 import { omit, prop } from 'ramda'
 import { toggles } from './domain/toggles'
 import { Application, Context } from './domain/type'
-import { findApplicationByName, saveApplication } from './repository'
+import { deleteApplicationById, findApplicationByName, saveApplication } from './repository'
 
 const getToggle = async (ctx: KoaContext) => {
   const context: Context = buildContext(ctx.query)
@@ -27,4 +27,12 @@ const postApplication = async (ctx: KoaContext) => {
   ctx.body = application
 }
 
-export { getToggle, getHealth, postApplication }
+const deleteApplication = async (ctx: KoaContext) => {
+  const { id } = ctx.params
+
+  await deleteApplicationById(id)
+
+  ctx.status = 204
+}
+
+export { deleteApplication, getToggle, getHealth, postApplication }

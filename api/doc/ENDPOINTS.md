@@ -34,6 +34,20 @@ Create a new application.
 
 Application was created.
 
+### DELETE /application/{ID}
+
+Delete an existing application by ID.
+
+#### Responses
+
+##### 204
+
+Application was deleted.
+
+##### 404
+
+Application not found.
+
 ## Toggle
 
 ### GET /toggle
