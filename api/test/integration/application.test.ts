@@ -16,11 +16,16 @@ describe('application', () => {
   }
 
   test('responds with status 201 and created application', async () => {
+    const uuidRegEx = /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/g
+
     const response = await request(app)
       .post('/application')
       .send(payload)
 
     expect(response.status).toEqual(CREATED)
-    expect(response.body).toEqual(payload)
+    expect(response.body).toMatchObject({
+      ...payload,
+      id: expect.stringMatching(uuidRegEx)
+    })
   })
 })

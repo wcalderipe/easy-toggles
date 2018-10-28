@@ -1,4 +1,5 @@
 import { equals, pipe, reduce, where } from 'ramda'
+import * as uuid from 'uuid/v4'
 import { Store } from './type'
 
 const documents: object[] = [
@@ -17,6 +18,7 @@ const documents: object[] = [
         name: 'bar'
       }
     ],
+    id: 'fooapp-fake-uuid',
     name: 'FooApp'
   }
 ]
@@ -48,9 +50,14 @@ const buildQueryPredicate = (query: any): object => {
 }
 
 const save = (document: any): Promise<any> => {
-  documents.push(document)
+  const ID_KEY = 'id'
+  const documentCopy = { ...document }
 
-  return Promise.resolve(document)
+  documentCopy[ID_KEY] = uuid()
+
+  documents.push(documentCopy)
+
+  return Promise.resolve({ ...documentCopy })
 }
 
 const store: Store = { find, save }

@@ -13,7 +13,8 @@ describe('memory store', () => {
   })
 
   describe('save', () => {
-    test('saves a new document and returns the saved representation', async () => {
+    test('saves a new document with an uuid id and returns the saved representation', async () => {
+      const uuidRegEx = /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/g
       const document = {
         name: 'BarApp'
       }
@@ -21,7 +22,10 @@ describe('memory store', () => {
       const result = await memoryStore.save(document)
 
       expect(documents.length).toEqual(2)
-      expect(result).toEqual(document)
+      expect(result).toMatchObject({
+        id: expect.stringMatching(uuidRegEx),
+        name: 'BarApp'
+      })
     })
   })
 })
