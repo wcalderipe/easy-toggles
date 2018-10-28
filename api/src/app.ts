@@ -2,7 +2,7 @@ import * as Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
 import * as Router from 'koa-router'
 import { onError } from './middleware'
-import { getHealth, getToggles, postApplication } from './router'
+import { getHealth, getToggle, postApplication } from './router'
 
 const buildApp = (withRouter?: (router: Router) => void): Koa => {
   const app = new Koa()
@@ -12,8 +12,8 @@ const buildApp = (withRouter?: (router: Router) => void): Koa => {
 
   router.use(onError)
   router.get('/health', getHealth)
-  router.get('/toggles', getToggles)
-  router.post('/applications', postApplication)
+  router.get('/toggle', getToggle)
+  router.post('/application', postApplication)
 
   if (withRouter) {
     withRouter(router)

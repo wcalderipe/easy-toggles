@@ -13,7 +13,7 @@
     "test:integration": "NODE_ENV=test jest integration/",
     "test:unit:watch": "npm run test:unit -- --watch",
     "test:unit": "NODE_ENV=test jest unit/",
-    "test": "NODE_ENV=test jest test/ --forceExit"
+    "test": "npm run test:unit && npm run test:integration"
   },
   "devDependencies": {
     "@types/http-status": "^0.2.30",

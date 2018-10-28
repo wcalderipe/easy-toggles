@@ -2,7 +2,7 @@ import { CREATED } from 'http-status'
 import { app } from '../../src/app'
 import { request } from './setup'
 
-describe('applications', () => {
+describe('application', () => {
   const payload = {
     features: [
       {
@@ -17,7 +17,7 @@ describe('applications', () => {
 
   test('responds with status 201 and created application', async () => {
     const response = await request(app)
-      .post('/applications')
+      .post('/application')
       .send(payload)
 
     expect(response.status).toEqual(CREATED)

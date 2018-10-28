@@ -2,7 +2,7 @@
 
 ## Application
 
-### POST /applications
+### POST /application
 
 Create a new application.
 
@@ -36,7 +36,7 @@ Application was created.
 
 ## Toggle
 
-### GET /toggles
+### GET /toggle
 
 Evaluate a given context into a set of feature toggles for an application.
 
@@ -46,7 +46,7 @@ Evaluate a given context into a set of feature toggles for an application.
 
 > Consider an evaluation for the application above.
 
-`GET /toggles?application=FooApp&country=BR`
+`GET /toggle?application=FooApp&country=BR`
 
 ```json
 {

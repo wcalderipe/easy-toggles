@@ -5,7 +5,7 @@ import { toggles } from './domain/toggles'
 import { Application, Context } from './domain/type'
 import { findApplicationByName, saveApplication } from './repository'
 
-const getToggles = async (ctx: KoaContext) => {
+const getToggle = async (ctx: KoaContext) => {
   const context: Context = buildContext(ctx.query)
   const applicationName: string = prop('application', ctx.query)
   const application: Application = await findApplicationByName(applicationName)
@@ -27,4 +27,4 @@ const postApplication = async (ctx: KoaContext) => {
   ctx.body = application
 }
 
-export { getToggles, getHealth, postApplication }
+export { getToggle, getHealth, postApplication }

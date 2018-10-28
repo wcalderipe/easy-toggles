@@ -6,14 +6,14 @@ import { request } from './setup'
 describe('toggles', () => {
   test('responds with status 200', async () => {
     const response = await request(app)
-      .get('/toggles?application=FooApp&country=BR')
+      .get('/toggle?application=FooApp&country=BR')
 
     expect(response.status).toEqual(OK)
   })
 
   test('responds with toggles contract', async () => {
     const response = await request(app)
-      .get('/toggles?application=FooApp&country=BR')
+      .get('/toggle?application=FooApp&country=BR')
     const expectedResponseBody = {
       bar: false,
       foo: true
@@ -25,7 +25,7 @@ describe('toggles', () => {
   describe('application is not found', () => {
     test('responds with status 404 and proper error contract', async () => {
       const response = await request(app)
-        .get('/toggles?application=BananaApp')
+        .get('/toggle?application=BananaApp')
 
       expect(response.status).toEqual(NOT_FOUND)
       expect(response.body).toEqual({ code: ErrorCode.APPLICATION_NOT_FOUND })
