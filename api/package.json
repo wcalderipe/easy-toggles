@@ -16,6 +16,7 @@
     "test": "npm run test:unit && npm run test:integration"
   },
   "devDependencies": {
+    "@types/aws-sdk": "^2.7.0",
     "@types/http-status": "^0.2.30",
     "@types/jest": "^23.3.1",
     "@types/koa": "^2.0.46",
@@ -33,6 +34,7 @@
     "typescript": "^3.0.1"
   },
   "dependencies": {
+    "aws-sdk": "^2.344.0",
     "http-status": "^1.2.0",
     "koa": "^2.5.3",
     "koa-bodyparser": "^4.2.1",
