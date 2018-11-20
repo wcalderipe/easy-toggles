@@ -1,6 +1,6 @@
 import { curry, equals, pipe, reduce, where } from 'ramda'
-import * as uuid from 'uuid/v4'
 import { Store } from './type'
+import { withID } from './withID'
 
 let documents: object[] = [
   {
@@ -57,14 +57,11 @@ const buildQueryPredicate = (query: any): object => {
 }
 
 const save = (document: any): Promise<any> => {
-  const ID_KEY = 'id'
-  const documentCopy = { ...document }
+  const documentWithID = withID(document)
 
-  documentCopy[ID_KEY] = uuid()
+  documents.push(documentWithID)
 
-  documents.push(documentCopy)
-
-  return Promise.resolve({ ...documentCopy })
+  return Promise.resolve({ ...documentWithID })
 }
 
 const destroy = (query: any): Promise<number> => {

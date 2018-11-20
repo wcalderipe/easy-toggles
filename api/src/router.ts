@@ -1,14 +1,15 @@
-import { CREATED } from 'http-status'
+import { CREATED, NO_CONTENT } from 'http-status'
 import { Context as KoaContext } from 'koa'
 import { omit, prop } from 'ramda'
 import { toggles } from './domain/toggles'
 import { Application, Context } from './domain/type'
 import { deleteApplicationById, findApplicationByName, saveApplication } from './repository'
+import { Store } from './store/type'
 
-const getToggle = async (ctx: KoaContext) => {
+const getToggle = (store: Store) => async (ctx: KoaContext) => {
   const context: Context = buildContext(ctx.query)
   const applicationName: string = prop('application', ctx.query)
-  const application: Application = await findApplicationByName(applicationName)
+  const application: Application = await findApplicationByName(applicationName, store)
 
   ctx.body = toggles(application.features, context)
 }
@@ -19,20 +20,20 @@ const getHealth = async (ctx: KoaContext) => {
   ctx.body = { up: true }
 }
 
-const postApplication = async (ctx: KoaContext) => {
+const postApplication = (store: Store) => async (ctx: KoaContext) => {
   const { body } = ctx.request
-  const application: Application = await saveApplication(body as Application)
+  const application: Application = await saveApplication(body as Application, store)
 
   ctx.status = CREATED
   ctx.body = application
 }
 
-const deleteApplication = async (ctx: KoaContext) => {
+const deleteApplication = (store: Store) => async (ctx: KoaContext) => {
   const { id } = ctx.params
 
-  await deleteApplicationById(id)
+  await deleteApplicationById(id, store)
 
-  ctx.status = 204
+  ctx.status = NO_CONTENT
 }
 
 export { deleteApplication, getToggle, getHealth, postApplication }
