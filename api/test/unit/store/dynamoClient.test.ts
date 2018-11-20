@@ -18,34 +18,30 @@ describe('dynamoClient', () => {
     }
 
     test('adapts internal options to aws client interface', async () => {
-      const fakeClient = buildFakeClient(
+      const client = buildFakeClient(
         jest.fn().mockResolvedValue({} as DynamoDB.PutItemOutput)
       )
-      const options = {
-        document: { data: 'to persist' },
-        table: 'dummyTableName'
-      }
+      const document = { data: 'to persist' }
+      const table = 'dummyTableName'
       const expectedPutItemInput = {
         Item: { data: 'to persist' },
         TableName: 'dummyTableName'
       }
 
-      await put(options, fakeClient)
+      await put({ document, table, client })
 
-      expect(fakeClient.put).toHaveBeenCalledWith(expectedPutItemInput)
+      expect(client.put).toHaveBeenCalledWith(expectedPutItemInput)
     })
 
     test('throws a DynamoClientError with the same message from AWSError', () => {
-      const fakeClient = buildFakeClient(
+      const client = buildFakeClient(
         jest.fn().mockRejectedValue(new Error('Internal error') as AWSError)
       )
-      const options = {
-        document: { data: 'to persist' },
-        table: 'dummyTableName'
-      }
+      const document = { data: 'to persist' }
+      const table = 'dummyTableName'
       const expectedError = new DynamoClientError('Internal error')
 
-      expect(put(options, fakeClient))
+      expect(put({ document, table, client }))
         .rejects
         .toEqual(expectedError)
     })
