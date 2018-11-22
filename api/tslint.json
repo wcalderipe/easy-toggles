@@ -5,6 +5,7 @@
     "interface-name": false,
     "max-line-length": [true, 120],
     "no-shadowed-variable": false,
+    "object-literal-sort-keys": false,
     "quotemark": [true, "single"],
     "semicolon": [true, "never"],
     "space-within-parens": [true, 0],

@@ -4,6 +4,8 @@ import { path } from 'ramda'
 interface Config {
   endpoint: string
   region: string
+  accessKeyId?: string
+  secretAccessKey?: string
 }
 
 interface Put {
@@ -15,7 +17,9 @@ interface Put {
 // TODO: Grab the endpoint and region from env vars or a config file
 const defaultConfig: Config = {
   endpoint: 'http://127.0.0.1:8000',
-  region: 'local'
+  region: 'local',
+  accessKeyId: 'FAKE_ACCESS_KEY',
+  secretAccessKey: 'FAKE_SECRET_ACCESS_KEY'
 }
 
 // TODO: Remove this call from here due to the hard control and the side-effects
