@@ -7,11 +7,9 @@ import { store as memoryStore } from './store/memory'
 import { Store } from './store/type'
 
 const buildApp = (withRouter?: (router: Router) => void): Koa => {
-  const storeType: string = process.env.EASY_TOGGLES_STORE_TYPE || 'memory'
-
   const app = new Koa()
   const router = new Router()
-  const store: Store = getStore(storeType)
+  const store: Store = memoryStore
 
   app.use(bodyParser())
 
@@ -29,18 +27,6 @@ const buildApp = (withRouter?: (router: Router) => void): Koa => {
   app.use(router.routes())
 
   return app
-}
-
-const getStore = (type: string): Store => {
-  const stores: { [key: string]: Store } = {
-    memory: memoryStore
-  }
-
-  if (!stores[type]) {
-    throw new Error('Unsupported store type')
-  }
-
-  return stores[type]
 }
 
 const app = buildApp()
