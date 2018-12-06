@@ -20,6 +20,15 @@ const getHealth = async (ctx: KoaContext) => {
   ctx.body = { up: true }
 }
 
+const getApplication = (store: Store) => async (ctx: KoaContext) => {
+  const { id } = ctx.params
+
+  // TODO: Handle application not found
+  const application: Application = await findApplicationById(id)
+
+  ctx.body = application
+}
+
 const postApplication = (store: Store) => async (ctx: KoaContext) => {
   const { body } = ctx.request
   const application: Application = await saveApplication(body as Application, store)
@@ -36,4 +45,10 @@ const deleteApplication = (store: Store) => async (ctx: KoaContext) => {
   ctx.status = NO_CONTENT
 }
 
-export { deleteApplication, getToggle, getHealth, postApplication }
+export {
+  deleteApplication,
+  getApplication,
+  getHealth,
+  getToggle,
+  postApplication
+}

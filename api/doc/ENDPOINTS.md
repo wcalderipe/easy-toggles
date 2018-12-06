@@ -2,6 +2,43 @@
 
 ## Application
 
+### GET /application/{ID}
+
+Return specific application by ID.
+
+#### Responses
+
+##### 200
+
+Return application data.
+
+```json
+{
+   "features" : [
+      {
+         "name" : "foo",
+         "criteria" : {
+            "country" : [
+               "BR",
+               "CL"
+            ]
+         }
+      },
+      {
+         "criteria" : {
+            "country" : [
+               "AR"
+            ]
+         },
+         "name" : "bar"
+      }
+   ],
+   "name" : "FooApp",
+   "id" : "fooapp-fake-id"
+}
+
+```
+
 ### POST /application
 
 Create a new application.
@@ -9,23 +46,23 @@ Create a new application.
 #### Request body
 
 ```json
-  {
-    "features": [
-      {
-        "criteria": {
-          "country": ["BR", "CL"]
-        },
-        "name": "foo"
+{
+  "features": [
+    {
+      "criteria": {
+        "country": ["BR", "CL"]
       },
-      {
-        "criteria": {
-          "country": ["AR"]
-        },
-        "name": "bar"
-      }
-    ],
-    "name": "FooApp"
-  }
+      "name": "foo"
+    },
+    {
+      "criteria": {
+        "country": ["AR"]
+      },
+      "name": "bar"
+    }
+  ],
+  "name": "FooApp"
+}
 ```
 
 #### Responses

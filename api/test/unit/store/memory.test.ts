@@ -7,16 +7,27 @@ describe('memory store', () => {
   })
 
   describe('find', () => {
-    test('finds documents using the given query', async () => {
+    beforeEach(() => {
       setDocuments([
         { id: 'foo', name: 'foo' },
-        { id: 'bar', name: 'bar' }
+        { id: 'bar', name: 'foo' }
       ])
+    })
 
-      const results: any[] = await memoryStore.find({ name: 'foo' })
+    test('finds documents using the given query', async () => {
+      const documents: any[] = await memoryStore.find({ id: 'foo' })
 
-      expect(results).toHaveLength(1)
-      expect(results[0].name).toEqual('foo')
+      expect(documents).toHaveLength(1)
+      expect(documents[0].name).toEqual('foo')
+    })
+
+    test('omits lokidb attributes from all documents', async () => {
+      const documents: any[] = await memoryStore.find({ name: 'foo' })
+
+      documents.forEach((document) => {
+        expect(document).not.toHaveProperty('meta')
+        expect(document).not.toHaveProperty('$loki')
+      })
     })
   })
 
@@ -32,12 +43,19 @@ describe('memory store', () => {
     test('returns the saved representation with an id as uuid', async () => {
       const uuidRegEx = /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/g
 
-      const result: any = await memoryStore.save({ name: 'foo' })
+      const document = await memoryStore.save({ name: 'foo' })
 
-      expect(result).toMatchObject({
+      expect(document).toMatchObject({
         id: expect.stringMatching(uuidRegEx),
         name: 'foo'
       })
+    })
+
+    test('omits lokidb attributes', async () => {
+      const document = await memoryStore.save({ name: 'foo' })
+
+      expect(document).not.toHaveProperty('meta')
+      expect(document).not.toHaveProperty('$loki')
     })
   })
 
@@ -45,19 +63,19 @@ describe('memory store', () => {
     test('deletes a document and resolve with true', async () => {
       await memoryStore.save({ name: 'foo' })
 
-      const result: boolean = await memoryStore.destroy({ name: 'foo' })
+      const isDeleted: boolean = await memoryStore.destroy({ name: 'foo' })
       const documents = await memoryStore.find({})
 
       expect(documents).toHaveLength(0)
-      expect(result).toEqual(true)
+      expect(isDeleted).toEqual(true)
     })
 
     test('resolves with false when document is not found', async () => {
       await memoryStore.save({ name: 'foo' })
 
-      const result: boolean = await memoryStore.destroy({ name: 'barfoo' })
+      const isDeleted: boolean = await memoryStore.destroy({ name: 'barfoo' })
 
-      expect(result).toEqual(false)
+      expect(isDeleted).toEqual(false)
     })
   })
 
@@ -77,6 +95,16 @@ describe('memory store', () => {
       const documents = await memoryStore.find({ color: 'yellow' })
 
       expect(documents).toHaveLength(1)
+    })
+
+    test('omits lokidb attributes', async () => {
+      const query: Query = { color: 'red' }
+      const data: any = { color: 'yellow' }
+
+      const document: Document = await memoryStore.update(query, data)
+
+      expect(document).not.toHaveProperty('meta')
+      expect(document).not.toHaveProperty('$loki')
     })
   })
 })

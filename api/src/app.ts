@@ -2,7 +2,13 @@ import * as Koa from 'koa'
 import * as bodyParser from 'koa-bodyparser'
 import * as Router from 'koa-router'
 import { onError } from './middleware'
-import { deleteApplication, getHealth, getToggle, postApplication } from './router'
+import {
+  deleteApplication,
+  getApplication,
+  getHealth,
+  getToggle,
+  postApplication
+} from './router'
 import { store as memoryStore } from './store/memory'
 import { Store } from './store/type'
 
@@ -17,6 +23,7 @@ const buildApp = (withRouter?: (router: Router) => void): Koa => {
   router
     .get('/health', getHealth)
     .get('/toggle', getToggle(store))
+    .get('/application/:id', getApplication(store))
     .post('/application', postApplication(store))
     .delete('/application/:id', deleteApplication(store))
 

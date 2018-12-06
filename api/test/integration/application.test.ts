@@ -1,6 +1,8 @@
-import { CREATED, NO_CONTENT, NOT_FOUND } from 'http-status'
+import { CREATED, NO_CONTENT, NOT_FOUND, OK } from 'http-status'
 import { app } from '../../src/app'
 import { ErrorCode } from '../../src/domain/error'
+import { Application } from '../../src/domain/type'
+import { saveApplication } from '../../src/repository'
 import { request } from './setup'
 
 describe('application', () => {
@@ -15,6 +17,17 @@ describe('application', () => {
     ],
     name: 'FooApp'
   }
+
+  describe('GET /application', () => {
+    test('responds with status 200 and the application', async () => {
+      const application: Application = await saveApplication({ ...payload, name: 'BarApp' })
+      const response = await request(app)
+        .get(`/application/${application.id}`)
+
+      expect(response.status).toEqual(OK)
+      expect(response.body).toEqual(application)
+    })
+  })
 
   describe('POST /application', () => {
     test('responds with status 201 and created application', async () => {

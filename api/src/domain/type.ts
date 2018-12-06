@@ -1,10 +1,11 @@
 export interface Application {
-  name: string,
+  id?: string
+  name: string
   features: Feature[]
 }
 
 export interface Feature {
-  name: string,
+  name: string
   criteria: Criteria
 }
 

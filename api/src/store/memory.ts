@@ -1,4 +1,5 @@
 import * as Loki from 'lokijs'
+import { omit } from 'ramda'
 import { Document, Query, Store } from './type'
 import { withID } from './withID'
 
@@ -35,7 +36,7 @@ const setDocuments = (docs: Document[]): void => {
 const find = (query: Query): Promise<any[]> => {
   const results: any[] = collection.find(query)
 
-  return Promise.resolve(results)
+  return Promise.resolve(results.map(omitLokiAttributes))
 }
 
 const save = (document: any): Promise<any> => {
@@ -43,7 +44,7 @@ const save = (document: any): Promise<any> => {
 
   collection.insert(documentWithID)
 
-  return Promise.resolve({ ...documentWithID })
+  return Promise.resolve(omitLokiAttributes({ ...documentWithID }))
 }
 
 const destroy = (query: Query): Promise<boolean> => {
@@ -69,8 +70,10 @@ const update = (query: Query, data: any): Promise<any> => {
   collection.update(updatedDocument)
 
   // TODO: Test the return of the document updated state
-  return Promise.resolve(updatedDocument)
+  return Promise.resolve(omitLokiAttributes(updatedDocument))
 }
+
+const omitLokiAttributes = omit(['meta', '$loki'])
 
 const store: Store = {
   destroy,
