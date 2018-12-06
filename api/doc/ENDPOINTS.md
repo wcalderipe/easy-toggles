@@ -97,7 +97,7 @@ Evaluate a given context into a set of feature toggles for an application.
 
 > Consider an evaluation for the application above.
 
-`GET /toggle?application=FooApp&country=BR`
+`GET /toggle?applicationId=fooapp-fake-id&country=BR`
 
 ```json
 {
