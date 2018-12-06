@@ -1,5 +1,15 @@
 export interface Store {
-  find: (query: any) => Promise<any[]>
+  destroy: (query: Query) => Promise<boolean>
+  find: (query: Query) => Promise<any[]>
   save: (document: any) => Promise<any>
-  destroy: (query: any) => Promise<number>
+  update: (query: Query, data: any) => Promise<any>
+}
+
+export interface Query {
+  [key: string]: string
+}
+
+export interface Document {
+  id: string,
+  [key: string]: any
 }

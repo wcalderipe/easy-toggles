@@ -18,9 +18,9 @@ const saveApplication = async (application: Application, store: Store = memorySt
 }
 
 const deleteApplicationById = async (id: string, store: Store = memoryStore): Promise<boolean> => {
-  const deleteCount: number = await memoryStore.destroy({ id })
+  const isDeleted: boolean = await memoryStore.destroy({ id })
 
-  if (deleteCount === 0) {
+  if (!isDeleted) {
     throw new ApplicationNotFound()
   }
 

@@ -1,4 +1,5 @@
-import { getDocuments, setDocuments, store as memoryStore } from '../../../src/store/memory'
+import { setDocuments, store as memoryStore } from '../../../src/store/memory'
+import { Query } from '../../../src/store/type'
 
 describe('memory store', () => {
   beforeEach(() => {
@@ -8,65 +9,74 @@ describe('memory store', () => {
   describe('find', () => {
     test('finds documents using the given query', async () => {
       setDocuments([
-        { name: 'FooApp' }
+        { id: 'foo', name: 'foo' },
+        { id: 'bar', name: 'bar' }
       ])
 
-      const query = { name: 'FooApp' }
-
-      const results: any[] = await memoryStore.find(query)
+      const results: any[] = await memoryStore.find({ name: 'foo' })
 
       expect(results).toHaveLength(1)
-      expect(results[0].name).toEqual('FooApp')
+      expect(results[0].name).toEqual('foo')
     })
   })
 
   describe('save', () => {
-    const document = {
-      name: 'BarApp'
-    }
-
     test('saves a new document with an uuid id and returns the saved representation', async () => {
-      await memoryStore.save(document)
+      await memoryStore.save({ name: 'foo' })
 
-      expect(getDocuments()).toHaveLength(1)
+      const documents = await memoryStore.find({})
+
+      expect(documents).toHaveLength(1)
     })
 
     test('returns the saved representation with an id as uuid', async () => {
       const uuidRegEx = /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/g
 
-      const result: any = await memoryStore.save(document)
+      const result: any = await memoryStore.save({ name: 'foo' })
 
       expect(result).toMatchObject({
         id: expect.stringMatching(uuidRegEx),
-        name: 'BarApp'
+        name: 'foo'
       })
     })
   })
 
   describe('destroy', () => {
-    const document = {
-      name: 'DeleteMe'
-    }
+    test('deletes a document and resolve with true', async () => {
+      await memoryStore.save({ name: 'foo' })
 
-    beforeAll(() => {
-      setDocuments([])
+      const result: boolean = await memoryStore.destroy({ name: 'foo' })
+      const documents = await memoryStore.find({})
+
+      expect(documents).toHaveLength(0)
+      expect(result).toEqual(true)
     })
 
-    test('deletes all documents that match the given query', async () => {
-      await memoryStore.save(document)
+    test('resolves with false when document is not found', async () => {
+      await memoryStore.save({ name: 'foo' })
 
-      await memoryStore.destroy({ name: 'DeleteMe' })
+      const result: boolean = await memoryStore.destroy({ name: 'barfoo' })
 
-      expect(getDocuments()).toHaveLength(0)
+      expect(result).toEqual(false)
+    })
+  })
+
+  describe('update', () => {
+    beforeEach(async () => {
+      setDocuments([
+        { id: 'foo', color: 'red' },
+        { id: 'baz', color: 'blue' }
+      ])
     })
 
-    test('returns the number of deleted documents', async () => {
-      await memoryStore.save(document)
-      await memoryStore.save(document)
+    test('updates a document and resolve with the actual document state', async () => {
+      const query: Query = { color: 'red' }
+      const data: any = { color: 'yellow' }
 
-      const result: number = await memoryStore.destroy({ name: 'DeleteMe' })
+      await memoryStore.update(query, data)
+      const documents = await memoryStore.find({ color: 'yellow' })
 
-      expect(result).toEqual(2)
+      expect(documents).toHaveLength(1)
     })
   })
 })

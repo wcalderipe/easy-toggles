@@ -1,8 +1,10 @@
-import { curry, equals, pipe, reduce, where } from 'ramda'
-import { Store } from './type'
+import * as Loki from 'lokijs'
+import { Document, Query, Store } from './type'
 import { withID } from './withID'
 
-let documents: object[] = [
+const database = new Loki('')
+const collection = database.addCollection('Application', { indices: ['id'] })
+const documents: Document[] = [
   {
     features: [
       {
@@ -23,79 +25,58 @@ let documents: object[] = [
   }
 ]
 
-const getDocuments = (): object[] => documents
-const setDocuments = (docs: object[]): void => {
-  documents = docs
+collection.insert(documents)
+
+const setDocuments = (docs: Document[]): void => {
+  collection.clear()
+  collection.insert(docs)
 }
 
-const find = (query: any): Promise<any[]> => {
-  const results: any[] = documents.filter(queryMatcher(query))
+const find = (query: Query): Promise<any[]> => {
+  const results: any[] = collection.find(query)
 
   return Promise.resolve(results)
 }
 
-const queryMatcher = curry((query: object, document: any) => {
-  return where(buildQueryPredicate(query), document)
-})
-
-const buildQueryPredicate = (query: any): object => {
-  const buildPredicate = (prev: object, key: string) => {
-    const value = query[key]
-
-    return {
-      ...prev,
-      [key]: equals(value)
-    }
-  }
-
-  const predicates = pipe(
-    Object.keys,
-    reduce(buildPredicate, {})
-  )(query)
-
-  return predicates
-}
-
 const save = (document: any): Promise<any> => {
-  const documentWithID = withID(document)
+  const documentWithID: Document = withID(document)
 
-  documents.push(documentWithID)
+  collection.insert(documentWithID)
 
   return Promise.resolve({ ...documentWithID })
 }
 
-const destroy = (query: any): Promise<number> => {
-  interface Reduction {
-    deleteCount: number
-    documents: object[]
+const destroy = (query: Query): Promise<boolean> => {
+  const document: Document | null = collection.findOne(query)
+
+  if (!document) {
+    return Promise.resolve(false)
   }
 
-  const accumulator: Reduction = { deleteCount: 0, documents: [] }
+  collection.remove(document)
 
-  const result: Reduction = documents.reduce((accumulator: Reduction, document: object) => {
-    if (!queryMatcher(query, document)) {
-      return {
-        ...accumulator,
-        documents: [
-          ...accumulator.documents,
-          document
-        ]
-      }
-    }
-
-    const deleteCount: number = accumulator.deleteCount + 1
-
-    return {
-      ...accumulator,
-      deleteCount
-    }
-  }, accumulator)
-
-  setDocuments(result.documents)
-
-  return Promise.resolve(result.deleteCount)
+  return Promise.resolve(true)
 }
 
-const store: Store = { destroy, find, save }
+const update = (query: Query, data: any): Promise<any> => {
+  // TODO: Handle not found documents
+  const document: Document | null = collection.findOne(query)
+  const updatedDocument: Document = {
+    ...document,
+    ...data
+  }
 
-export { store, getDocuments, setDocuments }
+  collection.update(updatedDocument)
+
+  // TODO: Test the return of the document updated state
+  return Promise.resolve(updatedDocument)
+}
+
+const store: Store = {
+  destroy,
+  find,
+  save,
+  update
+}
+
+export { store, setDocuments }
