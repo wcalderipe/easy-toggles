@@ -3,13 +3,13 @@ import { Context as KoaContext } from 'koa'
 import { omit, prop } from 'ramda'
 import { toggles } from './domain/toggles'
 import { Application, Context } from './domain/type'
-import { deleteApplicationById, findApplicationByName, saveApplication } from './repository'
+import { deleteApplicationById, findApplicationById, saveApplication } from './repository'
 import { Store } from './store/type'
 
 const getToggle = (store: Store) => async (ctx: KoaContext) => {
   const context: Context = buildContext(ctx.query)
-  const applicationName: string = prop('application', ctx.query)
-  const application: Application = await findApplicationByName(applicationName, store)
+  const applicationId: string = prop('applicationId', ctx.query)
+  const application: Application = await findApplicationById(applicationId, store)
 
   ctx.body = toggles(application.features, context)
 }

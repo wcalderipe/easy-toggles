@@ -20,7 +20,7 @@ const documents: Document[] = [
         name: 'bar'
       }
     ],
-    id: 'fooapp-fake-uuid',
+    id: 'fooapp-fake-id',
     name: 'FooApp'
   }
 ]

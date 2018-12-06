@@ -3,8 +3,8 @@ import { Application } from './domain/type'
 import { store as memoryStore } from './store/memory'
 import { Store } from './store/type'
 
-const findApplicationByName = async (name: string, store: Store = memoryStore): Promise<Application> => {
-  const results = await store.find({ name })
+const findApplicationById = async (id: string, store: Store = memoryStore): Promise<Application> => {
+  const results = await store.find({ id })
 
   if (results.length === 0) {
     throw new ApplicationNotFound()
@@ -27,4 +27,4 @@ const deleteApplicationById = async (id: string, store: Store = memoryStore): Pr
   return true
 }
 
-export { findApplicationByName, saveApplication, deleteApplicationById }
+export { findApplicationById, saveApplication, deleteApplicationById }
