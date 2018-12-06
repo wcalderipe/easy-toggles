@@ -45,6 +45,18 @@ describe('application', () => {
     })
   })
 
+  describe('PUT /application', () => {
+    test('responds with status 200 and the updated application', async () => {
+      const application: Application = await saveApplication({ ...payload, name: 'BarApp' })
+      const response = await request(app)
+        .put(`/application/${application.id}`)
+        .send({ name: 'BarApp' })
+
+      expect(response.status).toEqual(OK)
+      expect(response.body).toEqual({ ...application, name: 'BarApp' })
+    })
+  })
+
   describe('DELETE /application/{ID}', () => {
     test('responds with status 204', async () => {
       const createResponse = await request(app)

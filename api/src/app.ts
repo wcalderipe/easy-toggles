@@ -7,7 +7,8 @@ import {
   getApplication,
   getHealth,
   getToggle,
-  postApplication
+  postApplication,
+  updateApplication
 } from './router'
 import { store as memoryStore } from './store/memory'
 import { Store } from './store/type'
@@ -25,6 +26,7 @@ const buildApp = (withRouter?: (router: Router) => void): Koa => {
     .get('/toggle', getToggle(store))
     .get('/application/:id', getApplication(store))
     .post('/application', postApplication(store))
+    .put('/application/:id', updateApplication(store))
     .delete('/application/:id', deleteApplication(store))
 
   if (withRouter) {

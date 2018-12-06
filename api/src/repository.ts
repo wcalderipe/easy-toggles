@@ -18,7 +18,7 @@ const saveApplication = async (application: Application, store: Store = memorySt
 }
 
 const deleteApplicationById = async (id: string, store: Store = memoryStore): Promise<boolean> => {
-  const isDeleted: boolean = await memoryStore.destroy({ id })
+  const isDeleted: boolean = await store.destroy({ id })
 
   if (!isDeleted) {
     throw new ApplicationNotFound()
@@ -27,4 +27,15 @@ const deleteApplicationById = async (id: string, store: Store = memoryStore): Pr
   return true
 }
 
-export { findApplicationById, saveApplication, deleteApplicationById }
+const updateApplicationById = async (
+  id: string, data: Partial<Application>, store: Store = memoryStore
+): Promise<Application> => {
+  return await store.update({ id }, data)
+}
+
+export {
+  deleteApplicationById,
+  findApplicationById,
+  saveApplication,
+  updateApplicationById
+}

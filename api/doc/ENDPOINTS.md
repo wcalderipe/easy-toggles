@@ -71,6 +71,36 @@ Create a new application.
 
 Application was created.
 
+### PUT /application/{ID}
+
+Update application.
+
+```json
+{
+  "features": [
+    {
+      "criteria": {
+        "country": ["BR", "CL"]
+      },
+      "name": "foo"
+    },
+    {
+      "criteria": {
+        "country": ["AR"]
+      },
+      "name": "bar"
+    }
+  ],
+  "name": "FooApp"
+}
+```
+
+#### Responses
+
+##### 200 
+
+Update the application successfuly and return the actual state 
+
 ### DELETE /application/{ID}
 
 Delete an existing application by ID.
