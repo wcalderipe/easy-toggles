@@ -53,6 +53,7 @@ const buildApolloServer = (store: Store): ApolloServer => {
 
     type Mutation {
       createApplication(input: ApplicationInput): Application
+      updateApplication(id: ID!, input: ApplicationInput): Application
       deleteApplication(id: ID!): Boolean
     }
   `
@@ -64,6 +65,7 @@ const buildApolloServer = (store: Store): ApolloServer => {
     },
     Mutation: {
       createApplication: resolver.createApplication(store),
+      updateApplication: resolver.updateApplication(store),
       deleteApplication: resolver.deleteApplication(store)
     }
   }

@@ -97,6 +97,60 @@ describe('graphql', () => {
     })
   })
 
+  describe('mutation updateApplication', () => {
+    test('updates the whole application', async () => {
+      const application: Application = await saveApplication({ ...applicationPayload, name: 'UpdateMe' })
+      const payload = {
+        query: `
+          mutation updateApplication {
+            updateApplication(id: "${application.id}", input: {
+              name: "I WAS UPDATED",
+              features: [
+                {
+                  name: "foo",
+                  criterias: [
+                    {
+                      name: "country",
+                      values: ["AU"]
+                    }
+                  ]
+                }
+              ]
+            }) {
+              id,
+              name,
+              features {
+                name,
+                criteria
+              }
+            }
+          }
+        `
+      }
+
+      const { body, status } = await graphqlRequest(app)
+        .send(payload)
+
+      expect(status).toEqual(OK)
+      expect(body).toMatchObject({
+        data: {
+          updateApplication: {
+            id: application.id,
+            name: 'I WAS UPDATED',
+            features: [
+              {
+                name: 'foo',
+                criteria: {
+                  country: ['AU']
+                }
+              }
+            ]
+          }
+        }
+      })
+    })
+  })
+
   describe('mutation deleteApplication', () => {
     test('deletes an existing application', async () => {
       const application: Application = await saveApplication({ ...applicationPayload, name: 'DeleteMe' })

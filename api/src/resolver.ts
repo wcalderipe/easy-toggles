@@ -6,7 +6,8 @@ import {
 import {
   deleteApplicationById,
   findApplicationById,
-  saveApplication
+  saveApplication,
+  updateApplicationById
 } from './repository'
 import { Store } from './store/type'
 
@@ -18,6 +19,9 @@ const deleteApplication = (store: Store) => async (source: any, { id }: any): Pr
 
 const createApplication = (store: Store) => async (source: any, { input }: any): Promise<Application> =>
   await saveApplication(buildApplication(input), store)
+
+const updateApplication = (store: Store) => async (source: any, { id, input }: any): Promise<Application> =>
+  await updateApplicationById(id, buildApplication(input), store)
 
 interface FeatureInput {
   name: string
@@ -52,5 +56,6 @@ const mapFeatureInputToFeature = (feature: FeatureInput): Feature => {
 export {
   application,
   createApplication,
-  deleteApplication
+  deleteApplication,
+  updateApplication
 }
