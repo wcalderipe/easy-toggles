@@ -24,7 +24,7 @@ const buildApolloServer = (store: Store): ApolloServer => {
     type Application {
       id: ID!
       name: String!
-      features: [Feature]!
+      features: [Feature!]!
     }
 
     type Feature {
@@ -35,16 +35,38 @@ const buildApolloServer = (store: Store): ApolloServer => {
     type Query {
       application(id: ID!): Application
     }
+
+    input ApplicationInput {
+      name: String!
+      features: [FeatureInput]!
+    }
+
+    input FeatureInput {
+      name: String!
+      criterias: [CriteriaInput]!
+    }
+
+    input CriteriaInput {
+      name: String!
+      values: [String]!
+    }
+
+    type Mutation {
+      createApplication(input: ApplicationInput): Application
+    }
   `
 
   const resolvers: IResolvers = {
     JSON: GraphQLJSON,
     Query: {
       application: resolver.application(store)
+    },
+    Mutation: {
+      createApplication: resolver.createApplication(store)
     }
   }
 
-  const server = new ApolloServer({
+  const server: ApolloServer = new ApolloServer({
     typeDefs,
     resolvers
   })

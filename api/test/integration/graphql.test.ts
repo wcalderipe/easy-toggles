@@ -1,3 +1,4 @@
+import { OK } from 'http-status'
 import { app } from '../../src/app'
 import { Application } from '../../src/domain/type'
 import { saveApplication } from '../../src/repository'
@@ -5,7 +6,7 @@ import { graphqlRequest } from './setup'
 
 describe('graphql', () => {
   describe('query application', () => {
-    const payload = {
+    const applicationPayload = {
       features: [
         {
           criteria: {
@@ -18,26 +19,81 @@ describe('graphql', () => {
     }
 
     test('returns the full application', async () => {
-      const application: Application = await saveApplication({ ...payload, name: 'BarApp' })
-      const query = {
+      const application: Application = await saveApplication({ ...applicationPayload, name: 'BarApp' })
+      const payload = {
         query: `
-        {
-          application(id: "${application.id}") {
-            id,
-            name,
-            features {
-              name
-              criteria
+          query application {
+            application(id: "${application.id}") {
+              id,
+              name,
+              features {
+                name,
+                criteria
+              }
             }
           }
-        }
-      `
+        `
       }
 
-      const { body } = await graphqlRequest(app)
-        .send({ query })
+      const { body, status } = await graphqlRequest(app)
+        .send(payload)
 
+      expect(status).toEqual(OK)
       expect(body).toEqual({ data: { application } })
+    })
+  })
+
+  describe('mutation createApplication', () => {
+    test('creates a new application', async () => {
+      const expectId = /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/g
+      const payload = {
+        query: `
+          mutation createApplication {
+            createApplication(input: {
+              name: "gday, mate!",
+              features: [
+                {
+                  name: "isKangarooEnable",
+                  criterias: [
+                    {
+                      name: "country",
+                      values: ["AU"]
+                    }
+                  ]
+                }
+              ]
+            }) {
+              id,
+              name,
+              features {
+                name,
+                criteria
+              }
+            }
+          }
+        `
+      }
+
+      const { body, status } = await graphqlRequest(app)
+        .send(payload)
+
+      expect(status).toEqual(OK)
+      expect(body).toMatchObject({
+        data: {
+          createApplication: {
+            id: expect.stringMatching(expectId),
+            name: 'gday, mate!',
+            features: [
+              {
+                name: 'isKangarooEnable',
+                criteria: {
+                  country: ['AU']
+                }
+              }
+            ]
+          }
+        }
+      })
     })
   })
 })
