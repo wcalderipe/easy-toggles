@@ -1,16 +1,23 @@
-import { Application, Criteria, Feature } from './domain/type'
-import { findApplicationById, saveApplication } from './repository'
+import {
+  Application,
+  Criteria,
+  Feature
+} from './domain/type'
+import {
+  deleteApplicationById,
+  findApplicationById,
+  saveApplication
+} from './repository'
 import { Store } from './store/type'
 
-const application = (store: Store) => async (source: any, context: any): Promise<Application> =>
-  await findApplicationById(context.id, store)
+const application = (store: Store) => async (source: any, { id }: any): Promise<Application> =>
+  await findApplicationById(id, store)
 
-const createApplication = (store: Store) => async (source: any, context: any): Promise<Application> => {
-  const { input } = context
-  const application: Application = buildApplication(input)
+const deleteApplication = (store: Store) => async (source: any, { id }: any): Promise<boolean> =>
+  await deleteApplicationById(id, store)
 
-  return await saveApplication(application, store)
-}
+const createApplication = (store: Store) => async (source: any, { input }: any): Promise<Application> =>
+  await saveApplication(buildApplication(input), store)
 
 interface FeatureInput {
   name: string
@@ -42,4 +49,8 @@ const mapFeatureInputToFeature = (feature: FeatureInput): Feature => {
   }
 }
 
-export { application, createApplication }
+export {
+  application,
+  createApplication,
+  deleteApplication
+}

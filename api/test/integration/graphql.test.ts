@@ -5,19 +5,19 @@ import { saveApplication } from '../../src/repository'
 import { graphqlRequest } from './setup'
 
 describe('graphql', () => {
-  describe('query application', () => {
-    const applicationPayload = {
-      features: [
-        {
-          criteria: {
-            country: ['AU']
-          },
-          name: 'foo'
-        }
-      ],
-      name: 'FooApp'
-    }
+  const applicationPayload = {
+    features: [
+      {
+        criteria: {
+          country: ['AU']
+        },
+        name: 'foo'
+      }
+    ],
+    name: 'FooApp'
+  }
 
+  describe('query application', () => {
     test('returns the full application', async () => {
       const application: Application = await saveApplication({ ...applicationPayload, name: 'BarApp' })
       const payload = {
@@ -94,6 +94,25 @@ describe('graphql', () => {
           }
         }
       })
+    })
+  })
+
+  describe('mutation deleteApplication', () => {
+    test('deletes an existing application', async () => {
+      const application: Application = await saveApplication({ ...applicationPayload, name: 'DeleteMe' })
+      const payload = {
+        query: `
+          mutation deleteApplication {
+            deleteApplication(id: "${application.id}")
+          }
+        `
+      }
+
+      const { body, status } = await graphqlRequest(app)
+        .send(payload)
+
+      expect(status).toEqual(OK)
+      expect(body).toEqual({ data: { deleteApplication: true } })
     })
   })
 })
