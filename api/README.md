@@ -5,6 +5,7 @@
 ## Run
 
 ```shell
+npm run start:dev # run with nodemon
 npm run build && npm run start:prod
 ```
 
@@ -27,6 +28,24 @@ docker build \
 docker run --publish 8080:8080 --rm easy-toggles-api
 ```
 
-## Endpoint
+## GraphQL 
 
-See [doc/ENDPOINTS.md](https://github.com/wcalderipe/easy-toggles/blob/master/api/doc/ENDPOINTS.md)
+We're using GraphQL with Apollo under the hood. Try it out!
+
+```shell
+# start the server
+npm run start:dev
+
+# open the graphql playground
+open http://127.0.0.1:3000/graphql
+```
+
+### Supported Query and Mutation
+
+| Query       | Mutation          |
+| ----------- | ----------------- |
+| application | createApplication |
+|             | updateApplication |
+|             | deleteApplication |
+
+> ⚠️ at the moment, updateApplication mutation can only update the whole Application structure like a PUT in RESTful.
