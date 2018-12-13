@@ -49,3 +49,46 @@ open http://127.0.0.1:3000/graphql
 |             | deleteApplication |
 
 > ⚠️ at the moment, updateApplication mutation can only update the whole Application structure like a PUT in RESTful.
+
+## RESTful
+
+Supported RESTful endpoints
+
+### GET /toggle
+
+Evaluate a given context into a set of feature toggles for an application.
+
+`GET /toggle?applicationId=foo-app-fake-id&country=BR`
+
+#### Response
+
+##### 200
+
+```json
+{
+  "foo": true,
+  "bar": false
+}
+```
+
+##### 404
+
+Application not found.
+
+```json
+{
+  "code": "APPLICATION_NOT_FOUND"
+}
+```
+
+### GET /health
+
+#### Response
+
+##### 200
+
+```json
+{
+  "up": true
+}
+```
