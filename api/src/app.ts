@@ -21,7 +21,12 @@ const buildApolloServer = (store: Store): ApolloServer => {
 
     type Feature {
       name: String!
-      criteria: JSON!
+      criterias: [Criteria!]!
+    }
+
+    type Criteria {
+      name: String!
+      values: [String!]!
     }
 
     type Query {

@@ -8,9 +8,9 @@ describe('application', () => {
   const applicationPayload = {
     features: [
       {
-        criteria: {
-          country: ['AU']
-        },
+        criterias: [
+          { name: 'country', values: ['AU'] }
+        ],
         name: 'foo'
       }
     ],
@@ -28,7 +28,10 @@ describe('application', () => {
               name,
               features {
                 name,
-                criteria
+                criterias {
+                  name,
+                  values
+                }
               }
             }
           }
@@ -67,7 +70,10 @@ describe('application', () => {
               name,
               features {
                 name,
-                criteria
+                criterias {
+                  name,
+                  values
+                }
               }
             }
           }
@@ -86,9 +92,9 @@ describe('application', () => {
             features: [
               {
                 name: 'isKangarooEnable',
-                criteria: {
-                  country: ['AU']
-                }
+                criterias: [
+                  { name: 'country', values: ['AU'] }
+                ]
               }
             ]
           }
@@ -121,7 +127,10 @@ describe('application', () => {
               name,
               features {
                 name,
-                criteria
+                criterias {
+                  name,
+                  values
+                }
               }
             }
           }
@@ -140,9 +149,9 @@ describe('application', () => {
             features: [
               {
                 name: 'foo',
-                criteria: {
-                  country: ['AU']
-                }
+                criterias: [
+                  { name: 'country', values: ['AU'] }
+                ]
               }
             ]
           }

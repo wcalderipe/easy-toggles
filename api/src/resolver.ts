@@ -1,8 +1,4 @@
-import {
-  Application,
-  Criteria,
-  Feature
-} from './domain/type'
+import { Application } from './domain/type'
 import {
   deleteApplicationById,
   findApplicationById,
@@ -18,40 +14,10 @@ const deleteApplication = (store: Store) => async (source: any, { id }: any): Pr
   await deleteApplicationById(id, store)
 
 const createApplication = (store: Store) => async (source: any, { input }: any): Promise<Application> =>
-  await saveApplication(buildApplication(input), store)
+  await saveApplication(input, store)
 
 const updateApplication = (store: Store) => async (source: any, { id, input }: any): Promise<Application> =>
-  await updateApplicationById(id, buildApplication(input), store)
-
-interface FeatureInput {
-  name: string
-  criterias: [
-    { name: string, values: string[] }
-  ]
-}
-
-const buildApplication = (input: { name: string, features: FeatureInput[] }): Application => {
-  return {
-    ...input,
-    features: input.features.map(mapFeatureInputToFeature)
-  }
-}
-
-const mapFeatureInputToFeature = (feature: FeatureInput): Feature => {
-  const reducer = (accumulator: Criteria, criteriaInput: { name: string, values: string[] }) => {
-    return {
-      ...accumulator,
-      [criteriaInput.name]: criteriaInput.values
-    }
-  }
-
-  const criteria = feature.criterias.reduce(reducer , {})
-
-  return {
-    name: feature.name,
-    criteria
-  }
-}
+  await updateApplicationById(id, input, store)
 
 export {
   application,
