@@ -1,12 +1,11 @@
-import { CREATED, NO_CONTENT, NOT_FOUND, OK } from 'http-status'
+import { OK } from 'http-status'
 import { app } from '../../src/app'
-import { ErrorCode } from '../../src/domain/error'
 import { Application } from '../../src/domain/type'
 import { saveApplication } from '../../src/repository'
-import { request } from './setup'
+import { graphqlRequest } from './setup'
 
 describe('application', () => {
-  const payload = {
+  const applicationPayload = {
     features: [
       {
         criteria: {
@@ -18,66 +17,156 @@ describe('application', () => {
     name: 'FooApp'
   }
 
-  describe('GET /application', () => {
-    test('responds with status 200 and the application', async () => {
-      const application: Application = await saveApplication({ ...payload, name: 'BarApp' })
-      const response = await request(app)
-        .get(`/application/${application.id}`)
+  describe('query application', () => {
+    test('returns the full application', async () => {
+      const application: Application = await saveApplication({ ...applicationPayload, name: 'BarApp' })
+      const payload = {
+        query: `
+          query application {
+            application(id: "${application.id}") {
+              id,
+              name,
+              features {
+                name,
+                criteria
+              }
+            }
+          }
+        `
+      }
 
-      expect(response.status).toEqual(OK)
-      expect(response.body).toEqual(application)
+      const { body, status } = await graphqlRequest(app)
+        .send(payload)
+
+      expect(status).toEqual(OK)
+      expect(body).toEqual({ data: { application } })
     })
   })
 
-  describe('POST /application', () => {
-    test('responds with status 201 and created application', async () => {
-      const uuidRegEx = /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/g
+  describe('mutation createApplication', () => {
+    test('creates a new application', async () => {
+      const expectId = /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/g
+      const payload = {
+        query: `
+          mutation createApplication {
+            createApplication(input: {
+              name: "gday, mate!",
+              features: [
+                {
+                  name: "isKangarooEnable",
+                  criterias: [
+                    {
+                      name: "country",
+                      values: ["AU"]
+                    }
+                  ]
+                }
+              ]
+            }) {
+              id,
+              name,
+              features {
+                name,
+                criteria
+              }
+            }
+          }
+        `
+      }
 
-      const response = await request(app)
-        .post('/application')
+      const { body, status } = await graphqlRequest(app)
         .send(payload)
 
-      expect(response.status).toEqual(CREATED)
-      expect(response.body).toMatchObject({
-        ...payload,
-        id: expect.stringMatching(uuidRegEx)
+      expect(status).toEqual(OK)
+      expect(body).toMatchObject({
+        data: {
+          createApplication: {
+            id: expect.stringMatching(expectId),
+            name: 'gday, mate!',
+            features: [
+              {
+                name: 'isKangarooEnable',
+                criteria: {
+                  country: ['AU']
+                }
+              }
+            ]
+          }
+        }
       })
     })
   })
 
-  describe('PUT /application', () => {
-    test('responds with status 200 and the updated application', async () => {
-      const application: Application = await saveApplication({ ...payload, name: 'BarApp' })
-      const response = await request(app)
-        .put(`/application/${application.id}`)
-        .send({ name: 'BarApp' })
+  describe('mutation updateApplication', () => {
+    test('updates the whole application', async () => {
+      const application: Application = await saveApplication({ ...applicationPayload, name: 'UpdateMe' })
+      const payload = {
+        query: `
+          mutation updateApplication {
+            updateApplication(id: "${application.id}", input: {
+              name: "I WAS UPDATED",
+              features: [
+                {
+                  name: "foo",
+                  criterias: [
+                    {
+                      name: "country",
+                      values: ["AU"]
+                    }
+                  ]
+                }
+              ]
+            }) {
+              id,
+              name,
+              features {
+                name,
+                criteria
+              }
+            }
+          }
+        `
+      }
 
-      expect(response.status).toEqual(OK)
-      expect(response.body).toEqual({ ...application, name: 'BarApp' })
+      const { body, status } = await graphqlRequest(app)
+        .send(payload)
+
+      expect(status).toEqual(OK)
+      expect(body).toMatchObject({
+        data: {
+          updateApplication: {
+            id: application.id,
+            name: 'I WAS UPDATED',
+            features: [
+              {
+                name: 'foo',
+                criteria: {
+                  country: ['AU']
+                }
+              }
+            ]
+          }
+        }
+      })
     })
   })
 
-  describe('DELETE /application/{ID}', () => {
-    test('responds with status 204', async () => {
-      const createResponse = await request(app)
-        .post('/application')
+  describe('mutation deleteApplication', () => {
+    test('deletes an existing application', async () => {
+      const application: Application = await saveApplication({ ...applicationPayload, name: 'DeleteMe' })
+      const payload = {
+        query: `
+          mutation deleteApplication {
+            deleteApplication(id: "${application.id}")
+          }
+        `
+      }
+
+      const { body, status } = await graphqlRequest(app)
         .send(payload)
-      const { id } = createResponse.body
 
-      const response = await request(app)
-        .delete(`/application/${id}`)
-
-      expect(response.status).toEqual(NO_CONTENT)
-    })
-
-    test('responds with status 404 when the given application is not found', async () => {
-      const response = await request(app)
-        .delete('/application/i-am-not-here')
-
-      expect(response.status).toEqual(NOT_FOUND)
-      expect(response.body).toEqual({
-        code: ErrorCode.APPLICATION_NOT_FOUND
-      })
+      expect(status).toEqual(OK)
+      expect(body).toEqual({ data: { deleteApplication: true } })
     })
   })
 })
