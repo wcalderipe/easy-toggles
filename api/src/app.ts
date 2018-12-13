@@ -1,6 +1,5 @@
 import { ApolloServer, gql, IResolvers } from 'apollo-server-koa'
 import { DocumentNode } from 'graphql'
-import * as GraphQLJSON from 'graphql-type-json'
 import * as Koa from 'koa'
 import * as Router from 'koa-router'
 import { onError } from './middleware'
@@ -11,8 +10,6 @@ import { Store } from './store/type'
 
 const buildApolloServer = (store: Store): ApolloServer => {
   const typeDefs: DocumentNode = gql`
-    scalar JSON
-
     type Application {
       id: ID!
       name: String!
@@ -71,7 +68,6 @@ const buildApolloServer = (store: Store): ApolloServer => {
   `
 
   const resolvers: IResolvers = {
-    JSON: GraphQLJSON,
     Query: {
       application: resolver.application(store)
     },
