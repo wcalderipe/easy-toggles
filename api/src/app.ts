@@ -2,7 +2,6 @@ import { ApolloServer, gql, IResolvers } from 'apollo-server-koa'
 import { DocumentNode } from 'graphql'
 import * as GraphQLJSON from 'graphql-type-json'
 import * as Koa from 'koa'
-import * as bodyParser from 'koa-bodyparser'
 import * as Router from 'koa-router'
 import { onError } from './middleware'
 import * as resolver from './resolver'
@@ -91,10 +90,8 @@ const buildApp = (withRouter?: (router: Router) => void): Koa => {
   const router = new Router()
   const store: Store = memoryStore
 
-  app.use(bodyParser())
-
-  router.use(onError)
   router
+    .use(onError)
     .get('/health', getHealth)
     .get('/toggle', getToggle(store))
 

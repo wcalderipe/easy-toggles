@@ -22,7 +22,6 @@
     "@types/http-status": "^0.2.30",
     "@types/jest": "^23.3.1",
     "@types/koa": "^2.0.46",
-    "@types/koa-bodyparser": "^5.0.1",
     "@types/koa-router": "^7.0.32",
     "@types/lokijs": "^1.5.2",
     "@types/ramda": "^0.25.36",
@@ -43,7 +42,6 @@
     "graphql-type-json": "^0.2.1",
     "http-status": "^1.2.0",
     "koa": "^2.5.3",
-    "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.4.0",
     "lokijs": "^1.5.5",
     "uuid": "^3.3.2"
