@@ -1,39 +1,109 @@
+import { ApolloServer, gql, IResolvers } from 'apollo-server-koa'
+import { DocumentNode } from 'graphql'
 import * as Koa from 'koa'
-import * as bodyParser from 'koa-bodyparser'
 import * as Router from 'koa-router'
 import { onError } from './middleware'
-import {
-  deleteApplication,
-  getApplication,
-  getHealth,
-  getToggle,
-  postApplication,
-  updateApplication
-} from './router'
+import * as resolver from './resolver'
+import { getHealth, getToggle } from './router'
 import { store as memoryStore } from './store/memory'
 import { Store } from './store/type'
+
+const buildApolloServer = (store: Store): ApolloServer => {
+  const typeDefs: DocumentNode = gql`
+    type Application {
+      id: ID!
+      name: String!
+      features: [Feature!]!
+    }
+
+    type Feature {
+      name: String!
+      criterias: [Criteria!]!
+    }
+
+    type Criteria {
+      name: String!
+      values: [String!]!
+    }
+
+    type Query {
+      application(id: ID!): Application
+    }
+
+    input CreateApplicationInput {
+      name: String!
+      features: [CreateFeatureInput]!
+    }
+
+    input CreateFeatureInput {
+      name: String!
+      criterias: [CreateCriteriaInput]!
+    }
+
+    input CreateCriteriaInput {
+      name: String!
+      values: [String]!
+    }
+
+    input UpdateApplicationInput {
+      name: String!
+      features: [UpdateFeatureInput]!
+    }
+
+    input UpdateFeatureInput {
+      name: String!
+      criterias: [UpdateCriteriaInput]!
+    }
+
+    input UpdateCriteriaInput {
+      name: String!
+      values: [String]!
+    }
+
+    type Mutation {
+      createApplication(input: CreateApplicationInput): Application
+      updateApplication(id: ID!, input: UpdateApplicationInput): Application
+      deleteApplication(id: ID!): Boolean
+    }
+  `
+
+  const resolvers: IResolvers = {
+    Query: {
+      application: resolver.application(store)
+    },
+    Mutation: {
+      createApplication: resolver.createApplication(store),
+      updateApplication: resolver.updateApplication(store),
+      deleteApplication: resolver.deleteApplication(store)
+    }
+  }
+
+  const server: ApolloServer = new ApolloServer({
+    typeDefs,
+    resolvers
+  })
+
+  return server
+}
 
 const buildApp = (withRouter?: (router: Router) => void): Koa => {
   const app = new Koa()
   const router = new Router()
   const store: Store = memoryStore
 
-  app.use(bodyParser())
-
-  router.use(onError)
   router
+    .use(onError)
     .get('/health', getHealth)
     .get('/toggle', getToggle(store))
-    .get('/application/:id', getApplication(store))
-    .post('/application', postApplication(store))
-    .put('/application/:id', updateApplication(store))
-    .delete('/application/:id', deleteApplication(store))
 
   if (withRouter) {
     withRouter(router)
   }
 
   app.use(router.routes())
+
+  const apolloServer: ApolloServer = buildApolloServer(store)
+  apolloServer.applyMiddleware({ app })
 
   return app
 }

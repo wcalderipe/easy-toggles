@@ -3,9 +3,9 @@ import { Context, Feature } from '../../../src/domain/type'
 
 describe('evaluate', () => {
   const feature: Feature = {
-    criteria: {
-      country: ['BR', 'CL']
-    },
+    criterias: [
+      { name: 'country', values: ['BR', 'CL'] }
+    ],
     name: 'newLoginForm'
   }
 
@@ -27,10 +27,10 @@ describe('evaluate', () => {
 
   describe('AND logical operator', () => {
     const feature: Feature = {
-      criteria: {
-        fruit: ['apple', 'strawberry'],
-        vegetable: ['potato', 'tomatoe']
-      },
+      criterias: [
+        { name: 'fruit', values: ['apple', 'strawberry'] },
+        { name: 'vegetable', values: ['potato', 'tomatoe'] }
+      ],
       name: 'fooFeature'
     }
 

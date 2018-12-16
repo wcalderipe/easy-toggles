@@ -6,11 +6,12 @@ export interface Application {
 
 export interface Feature {
   name: string
-  criteria: Criteria
+  criterias: Criteria[]
 }
 
 export interface Criteria {
-  [key: string]: string[]
+  name: string
+  values: string[]
 }
 
 export interface Context {

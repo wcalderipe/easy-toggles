@@ -4,15 +4,15 @@ import { Context, Feature, Toggles } from '../../../src/domain/type'
 describe('toggles', () => {
   const features: Feature[] = [
     {
-      criteria: {
-        country: ['BR', 'CL']
-      },
+      criterias: [
+        { name: 'country', values: ['BR', 'CL'] }
+      ],
       name: 'newLoginForm'
     },
     {
-      criteria: {
-        country: ['AR']
-      },
+      criterias: [
+        { name: 'country', values: ['AR'] }
+      ],
       name: 'requireSomething'
     }
   ]
