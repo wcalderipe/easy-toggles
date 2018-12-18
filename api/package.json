@@ -5,8 +5,9 @@
   "scripts": {
     "build:watch": "npm run build -- --watch",
     "build": "rm -rf dist/ && tsc",
-    "lint:fix": "tslint --project tsconfig.json --config tslint.json --fix",
     "lint": "tslint --project tsconfig.json --config tslint.json",
+    "format:check": "prettier --list-different ./src/**/*.ts ./test/**/.ts",
+    "format": "prettier --write ./src/**/*.ts ./test/**/.ts",
     "start:prod": "NODE_ENV=production node dist/server.js",
     "start:dev": "NODE_ENV=development nodemon",
     "test:ci": "NODE_ENV=test jest test/ --forceExit",
@@ -28,11 +29,13 @@
     "@types/uuid": "^3.4.4",
     "jest": "^23.6.0",
     "nodemon": "^1.18.7",
+    "prettier": "^1.15.3",
     "ramda": "^0.25.0",
     "supertest": "^3.2.0",
     "ts-jest": "^23.1.4",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.17.0",
     "typescript": "^3.0.1"
   },
   "dependencies": {
