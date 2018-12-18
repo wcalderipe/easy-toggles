@@ -29,8 +29,4 @@ class ApplicationNotFound extends ApiError {
   }
 }
 
-export {
-  ApiError,
-  ApplicationNotFound,
-  ErrorCode
-}
+export { ApiError, ApplicationNotFound, ErrorCode }

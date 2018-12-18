@@ -3,7 +3,10 @@ import { Application } from './domain/type'
 import { store as memoryStore } from './store/memory'
 import { Store } from './store/type'
 
-const findApplicationById = async (id: string, store: Store = memoryStore): Promise<Application> => {
+const findApplicationById = async (
+  id: string,
+  store: Store = memoryStore
+): Promise<Application> => {
   const results = await store.find({ id })
 
   if (results.length === 0) {
@@ -13,11 +16,17 @@ const findApplicationById = async (id: string, store: Store = memoryStore): Prom
   return results[0] as Application
 }
 
-const saveApplication = async (application: Application, store: Store = memoryStore): Promise<Application> => {
-  return await store.save(application) as Application
+const saveApplication = async (
+  application: Application,
+  store: Store = memoryStore
+): Promise<Application> => {
+  return (await store.save(application)) as Application
 }
 
-const deleteApplicationById = async (id: string, store: Store = memoryStore): Promise<boolean> => {
+const deleteApplicationById = async (
+  id: string,
+  store: Store = memoryStore
+): Promise<boolean> => {
   const isDeleted: boolean = await store.destroy({ id })
 
   if (!isDeleted) {
@@ -28,7 +37,9 @@ const deleteApplicationById = async (id: string, store: Store = memoryStore): Pr
 }
 
 const updateApplicationById = async (
-  id: string, data: Partial<Application>, store: Store = memoryStore
+  id: string,
+  data: Partial<Application>,
+  store: Store = memoryStore
 ): Promise<Application> => {
   return await store.update({ id }, data)
 }

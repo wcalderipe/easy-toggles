@@ -8,9 +8,7 @@ describe('application', () => {
   const applicationPayload = {
     features: [
       {
-        criterias: [
-          { name: 'country', values: ['AU'] }
-        ],
+        criterias: [{ name: 'country', values: ['AU'] }],
         name: 'foo'
       }
     ],
@@ -19,7 +17,10 @@ describe('application', () => {
 
   describe('query application', () => {
     test('returns the full application', async () => {
-      const application: Application = await saveApplication({ ...applicationPayload, name: 'BarApp' })
+      const application: Application = await saveApplication({
+        ...applicationPayload,
+        name: 'BarApp'
+      })
       const payload = {
         query: `
           query application {
@@ -38,8 +39,7 @@ describe('application', () => {
         `
       }
 
-      const { body, status } = await graphqlRequest(app)
-        .send(payload)
+      const { body, status } = await graphqlRequest(app).send(payload)
 
       expect(status).toEqual(OK)
       expect(body).toEqual({ data: { application } })
@@ -80,8 +80,7 @@ describe('application', () => {
         `
       }
 
-      const { body, status } = await graphqlRequest(app)
-        .send(payload)
+      const { body, status } = await graphqlRequest(app).send(payload)
 
       expect(status).toEqual(OK)
       expect(body).toMatchObject({
@@ -92,9 +91,7 @@ describe('application', () => {
             features: [
               {
                 name: 'isKangarooEnable',
-                criterias: [
-                  { name: 'country', values: ['AU'] }
-                ]
+                criterias: [{ name: 'country', values: ['AU'] }]
               }
             ]
           }
@@ -105,7 +102,10 @@ describe('application', () => {
 
   describe('mutation updateApplication', () => {
     test('updates the whole application', async () => {
-      const application: Application = await saveApplication({ ...applicationPayload, name: 'UpdateMe' })
+      const application: Application = await saveApplication({
+        ...applicationPayload,
+        name: 'UpdateMe'
+      })
       const payload = {
         query: `
           mutation updateApplication {
@@ -137,8 +137,7 @@ describe('application', () => {
         `
       }
 
-      const { body, status } = await graphqlRequest(app)
-        .send(payload)
+      const { body, status } = await graphqlRequest(app).send(payload)
 
       expect(status).toEqual(OK)
       expect(body).toMatchObject({
@@ -149,9 +148,7 @@ describe('application', () => {
             features: [
               {
                 name: 'foo',
-                criterias: [
-                  { name: 'country', values: ['AU'] }
-                ]
+                criterias: [{ name: 'country', values: ['AU'] }]
               }
             ]
           }
@@ -162,7 +159,10 @@ describe('application', () => {
 
   describe('mutation deleteApplication', () => {
     test('deletes an existing application', async () => {
-      const application: Application = await saveApplication({ ...applicationPayload, name: 'DeleteMe' })
+      const application: Application = await saveApplication({
+        ...applicationPayload,
+        name: 'DeleteMe'
+      })
       const payload = {
         query: `
           mutation deleteApplication {
@@ -171,8 +171,7 @@ describe('application', () => {
         `
       }
 
-      const { body, status } = await graphqlRequest(app)
-        .send(payload)
+      const { body, status } = await graphqlRequest(app).send(payload)
 
       expect(status).toEqual(OK)
       expect(body).toEqual({ data: { deleteApplication: true } })
