@@ -9,5 +9,5 @@ before_install:
   - docker build --tag easy-toggles-api --build-arg BUILD_CONTEXT=api/ --file api/Dockerfile api/
 
 script:
-  - docker run easy-toggles-api npm run lint
+  - docker run easy-toggles-api npm run lint && npm run format:check
   - docker run easy-toggles-api npm run test:ci
