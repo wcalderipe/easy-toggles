@@ -8,10 +8,7 @@ describe('memory store', () => {
 
   describe('find', () => {
     beforeEach(() => {
-      setDocuments([
-        { id: 'foo', name: 'foo' },
-        { id: 'bar', name: 'foo' }
-      ])
+      setDocuments([{ id: 'foo', name: 'foo' }, { id: 'bar', name: 'foo' }])
     })
 
     test('finds documents using the given query', async () => {
@@ -81,10 +78,7 @@ describe('memory store', () => {
 
   describe('update', () => {
     beforeEach(async () => {
-      setDocuments([
-        { id: 'foo', color: 'red' },
-        { id: 'baz', color: 'blue' }
-      ])
+      setDocuments([{ id: 'foo', color: 'red' }, { id: 'baz', color: 'blue' }])
     })
 
     test('updates a document and resolve with the actual document state', async () => {

@@ -9,15 +9,11 @@ const documents: Document[] = [
   {
     features: [
       {
-        criterias: [
-          { name: 'country', values: ['BR', 'CL'] }
-        ],
+        criterias: [{ name: 'country', values: ['BR', 'CL'] }],
         name: 'foo'
       },
       {
-        criterias: [
-          { name: 'country', values: ['AR'] }
-        ],
+        criterias: [{ name: 'country', values: ['AR'] }],
         name: 'bar'
       }
     ],

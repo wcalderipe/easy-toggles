@@ -10,6 +10,6 @@ export interface Query {
 }
 
 export interface Document {
-  id: string,
+  id: string
   [key: string]: any
 }

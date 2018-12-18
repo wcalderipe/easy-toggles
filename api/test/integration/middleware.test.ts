@@ -15,11 +15,12 @@ describe('middleware', () => {
 
     const suite = (config: SuiteConfig) => async () => {
       const app = buildApp((router: Router) => {
-        router.get('/throw', () => { throw config.error })
+        router.get('/throw', () => {
+          throw config.error
+        })
       })
 
-      const response = await request(app)
-        .get('/throw')
+      const response = await request(app).get('/throw')
 
       expect(response.status).toEqual(config.expectedStatus)
       expect(response.body).toEqual(config.expectedBody)

@@ -3,9 +3,7 @@ import { Context, Feature } from '../../../src/domain/type'
 
 describe('evaluate', () => {
   const feature: Feature = {
-    criterias: [
-      { name: 'country', values: ['BR', 'CL'] }
-    ],
+    criterias: [{ name: 'country', values: ['BR', 'CL'] }],
     name: 'newLoginForm'
   }
 
@@ -34,7 +32,7 @@ describe('evaluate', () => {
       name: 'fooFeature'
     }
 
-    test('returns false when context don\'t match all criterias', () => {
+    test("returns false when context don't match all criterias", () => {
       const context: Context = {
         fruit: 'apple',
         vegetable: 'garlic'
