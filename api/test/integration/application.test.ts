@@ -4,6 +4,14 @@ import { Application } from '../../src/domain/type'
 import { saveApplication } from '../../src/repository'
 import { graphqlRequest } from './setup'
 
+const expectApplicationNotFound = ({ status, body }) => {
+  expect(status).toEqual(OK)
+  expect(body.errors).toHaveLength(1)
+  expect(body.errors[0]).toMatchObject({
+    message: `Could not resolve to an Application with ID 'you-will-never-find-me'.`
+  })
+}
+
 describe('application', () => {
   const applicationPayload = {
     features: [
@@ -16,33 +24,44 @@ describe('application', () => {
   }
 
   describe('query application', () => {
+    const buildFindApplicationQuery = (id: string): string => `
+      query application {
+        application(id: "${id}") {
+          id,
+          name,
+          features {
+            name,
+            criterias {
+              name,
+              values
+            }
+          }
+        }
+      }
+    `
     test('returns the full application', async () => {
       const application: Application = await saveApplication({
         ...applicationPayload,
         name: 'BarApp'
       })
       const payload = {
-        query: `
-          query application {
-            application(id: "${application.id}") {
-              id,
-              name,
-              features {
-                name,
-                criterias {
-                  name,
-                  values
-                }
-              }
-            }
-          }
-        `
+        query: buildFindApplicationQuery(application.id)
       }
 
       const { body, status } = await graphqlRequest(app).send(payload)
 
       expect(status).toEqual(OK)
       expect(body).toEqual({ data: { application } })
+    })
+
+    test('returns application not found error', async () => {
+      const payload = {
+        query: buildFindApplicationQuery('you-will-never-find-me')
+      }
+
+      const { body, status } = await graphqlRequest(app).send(payload)
+
+      expectApplicationNotFound({ body, status })
     })
   })
 
@@ -101,40 +120,42 @@ describe('application', () => {
   })
 
   describe('mutation updateApplication', () => {
+    const buildUpdateApplicationMutation = (id: string): string => `
+      mutation updateApplication {
+        updateApplication(id: "${id}", input: {
+          name: "I WAS UPDATED",
+          features: [
+            {
+              name: "foo",
+              criterias: [
+                {
+                  name: "country",
+                  values: ["AU"]
+                }
+              ]
+            }
+          ]
+        }) {
+          id,
+          name,
+          features {
+            name,
+            criterias {
+              name,
+              values
+            }
+          }
+        }
+      }
+    `
+
     test('updates the whole application', async () => {
       const application: Application = await saveApplication({
         ...applicationPayload,
         name: 'UpdateMe'
       })
       const payload = {
-        query: `
-          mutation updateApplication {
-            updateApplication(id: "${application.id}", input: {
-              name: "I WAS UPDATED",
-              features: [
-                {
-                  name: "foo",
-                  criterias: [
-                    {
-                      name: "country",
-                      values: ["AU"]
-                    }
-                  ]
-                }
-              ]
-            }) {
-              id,
-              name,
-              features {
-                name,
-                criterias {
-                  name,
-                  values
-                }
-              }
-            }
-          }
-        `
+        query: buildUpdateApplicationMutation(application.id)
       }
 
       const { body, status } = await graphqlRequest(app).send(payload)
@@ -155,26 +176,48 @@ describe('application', () => {
         }
       })
     })
+
+    test('returns application not found error', async () => {
+      const payload = {
+        query: buildUpdateApplicationMutation('you-will-never-find-me')
+      }
+
+      const { body, status } = await graphqlRequest(app).send(payload)
+
+      expectApplicationNotFound({ body, status })
+    })
   })
 
   describe('mutation deleteApplication', () => {
+    const buildDeleteApplicationMutation = (id: string): string => `
+      mutation deleteApplication {
+        deleteApplication(id: "${id}")
+      }
+    `
+
     test('deletes an existing application', async () => {
       const application: Application = await saveApplication({
         ...applicationPayload,
         name: 'DeleteMe'
       })
       const payload = {
-        query: `
-          mutation deleteApplication {
-            deleteApplication(id: "${application.id}")
-          }
-        `
+        query: buildDeleteApplicationMutation(application.id)
       }
 
       const { body, status } = await graphqlRequest(app).send(payload)
 
       expect(status).toEqual(OK)
       expect(body).toEqual({ data: { deleteApplication: true } })
+    })
+
+    test('returns application not found error', async () => {
+      const payload = {
+        query: buildDeleteApplicationMutation('you-will-never-find-me')
+      }
+
+      const { body, status } = await graphqlRequest(app).send(payload)
+
+      expectApplicationNotFound({ body, status })
     })
   })
 })

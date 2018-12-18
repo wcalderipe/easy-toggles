@@ -1,3 +1,4 @@
+import { ApolloError } from 'apollo-server-koa'
 import { Application } from '../domain/type'
 import {
   deleteApplicationById,
@@ -11,13 +12,25 @@ const application = async (
   source: any,
   { id }: any,
   { store }: Context
-): Promise<Application> => await findApplicationById(id, store)
+): Promise<Application> => {
+  try {
+    return await findApplicationById(id, store)
+  } catch (err) {
+    throw buildNotFoundError(id)
+  }
+}
 
 const deleteApplication = async (
   source: any,
   { id }: any,
   { store }: Context
-): Promise<boolean> => await deleteApplicationById(id, store)
+): Promise<boolean> => {
+  try {
+    return await deleteApplicationById(id, store)
+  } catch (err) {
+    throw buildNotFoundError(id)
+  }
+}
 
 const createApplication = async (
   source: any,
@@ -29,6 +42,21 @@ const updateApplication = async (
   source: any,
   { id, input }: any,
   { store }: Context
-): Promise<Application> => await updateApplicationById(id, input, store)
+): Promise<Application> => {
+  try {
+    return await updateApplicationById(id, input, store)
+  } catch (err) {
+    throw buildNotFoundError(id)
+  }
+}
+
+const buildNotFoundError = (id: string) =>
+  buildError({
+    message: `Could not resolve to an Application with ID '${id}'.`,
+    code: 'NOT_FOUND'
+  })
+
+const buildError = ({ message, code }: { message: string; code: string }) =>
+  new ApolloError(message, code)
 
 export { application, createApplication, deleteApplication, updateApplication }
