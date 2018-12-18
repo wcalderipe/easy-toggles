@@ -4,10 +4,10 @@
   "license": "ISC",
   "scripts": {
     "build:watch": "npm run build -- --watch",
-    "build": "tsc",
+    "build": "rm -rf dist/ && tsc",
     "lint:fix": "tslint --project tsconfig.json --config tslint.json --fix",
     "lint": "tslint --project tsconfig.json --config tslint.json",
-    "start:prod": "NODE_ENV=production node dist/src/server.js",
+    "start:prod": "NODE_ENV=production node dist/server.js",
     "start:dev": "NODE_ENV=development nodemon",
     "test:ci": "NODE_ENV=test jest test/ --forceExit",
     "test:integration:watch": "npm run test:integration -- --watch",
