@@ -14,9 +14,7 @@ const toggles = (features: Feature[], context: Context): Toggles => {
   return toggles
 }
 
-const buildToggleTuple = (context: Context) => (
-  feature: Feature
-): ToggleTuple => {
+const buildToggleTuple = (context: Context) => (feature: Feature): ToggleTuple => {
   return [feature.name, evaluate(feature, context)]
 }
 

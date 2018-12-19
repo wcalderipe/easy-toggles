@@ -10,7 +10,6 @@ const evaluate = ({ criterias }: Feature, context: Context): boolean => {
   return isActive
 }
 
-const isPresent = (context: Context) => ({ name, values }: Criteria): boolean =>
-  contains(prop(name, context), values)
+const isPresent = (context: Context) => ({ name, values }: Criteria): boolean => contains(prop(name, context), values)
 
 export { evaluate }
