@@ -8,10 +8,7 @@ import { Store } from './store/type'
 const getToggle = (store: Store) => async (ctx: KoaContext) => {
   const context: Context = buildContext(ctx.query)
   const applicationId: string = prop('applicationId', ctx.query)
-  const application: Application = await findApplicationById(
-    applicationId,
-    store
-  )
+  const application: Application = await findApplicationById(store, applicationId)
 
   ctx.body = toggles(application.features, context)
 }

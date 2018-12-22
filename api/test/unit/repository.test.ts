@@ -1,8 +1,5 @@
 import { ApplicationNotFound } from '../../src/domain/error'
-import {
-  deleteApplicationById,
-  findApplicationById
-} from '../../src/repository'
+import { deleteApplicationById, findApplicationById } from '../../src/repository'
 import { Store } from '../../src/store/type'
 
 describe('repository', () => {
@@ -15,17 +12,13 @@ describe('repository', () => {
 
   describe('findApplicationByName', () => {
     test('throws ApplicationNotFound error when application does not exists', async () => {
-      await expect(
-        findApplicationById('banana-app', fakeStore)
-      ).rejects.toThrowError(ApplicationNotFound)
+      await expect(findApplicationById(fakeStore, 'banana-app')).rejects.toThrowError(ApplicationNotFound)
     })
   })
 
   describe('deleteApplicationById', async () => {
     test('throws ApplicationNotFound error when application does not exists', async () => {
-      await expect(
-        deleteApplicationById('banana-app', fakeStore)
-      ).rejects.toThrowError(ApplicationNotFound)
+      await expect(deleteApplicationById(fakeStore, 'banana-app')).rejects.toThrowError(ApplicationNotFound)
     })
   })
 })

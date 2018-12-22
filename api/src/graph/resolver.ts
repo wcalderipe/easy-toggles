@@ -7,7 +7,7 @@ import { Context as ResolverContext } from './server'
 
 const application = async (source: any, { id }: any, { store }: ResolverContext): Promise<Application> => {
   try {
-    return await findApplicationById(id, store)
+    return await findApplicationById(store, id)
   } catch (err) {
     throw buildNotFoundError(id)
   }
@@ -15,18 +15,18 @@ const application = async (source: any, { id }: any, { store }: ResolverContext)
 
 const deleteApplication = async (source: any, { id }: any, { store }: ResolverContext): Promise<boolean> => {
   try {
-    return await deleteApplicationById(id, store)
+    return await deleteApplicationById(store, id)
   } catch (err) {
     throw buildNotFoundError(id)
   }
 }
 
 const createApplication = async (source: any, { input }: any, { store }: ResolverContext): Promise<Application> =>
-  await saveApplication(input, store)
+  await saveApplication(store, input)
 
 const updateApplication = async (source: any, { id, input }: any, { store }: ResolverContext): Promise<Application> => {
   try {
-    return await updateApplicationById(id, input, store)
+    return await updateApplicationById(store, id, input)
   } catch (err) {
     throw buildNotFoundError(id)
   }
@@ -34,7 +34,7 @@ const updateApplication = async (source: any, { id, input }: any, { store }: Res
 
 const toggle = async (source: any, { applicationId, context }: any, { store }: ResolverContext): Promise<Toggle[]> => {
   try {
-    const { features }: Application = await findApplicationById(applicationId, store)
+    const { features }: Application = await findApplicationById(store, applicationId)
 
     return toggles(features, transformContext(context))
   } catch (err) {

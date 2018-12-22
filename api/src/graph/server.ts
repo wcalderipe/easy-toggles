@@ -1,4 +1,5 @@
 import { ApolloServer, IResolvers } from 'apollo-server-koa'
+// import { Repository } from '../repository'
 import { Store } from '../store/type'
 import * as resolver from './resolver'
 import { typeDefs } from './schema'

@@ -2,6 +2,7 @@ import { OK } from 'http-status'
 import { app } from '../../../src/app'
 import { Application } from '../../../src/domain/type'
 import { saveApplication } from '../../../src/repository'
+import { store as memoryStore } from '../../../src/store/memory'
 import { graphqlRequest } from '../setup'
 import { expectApplicationNotFound } from './helper'
 
@@ -101,7 +102,7 @@ describe('mutation', () => {
     `
 
     test('updates the whole application', async () => {
-      const application: Application = await saveApplication({
+      const application: Application = await saveApplication(memoryStore, {
         ...applicationPayload,
         name: 'UpdateMe'
       })
@@ -147,7 +148,7 @@ describe('mutation', () => {
     `
 
     test('deletes an existing application', async () => {
-      const application: Application = await saveApplication({
+      const application: Application = await saveApplication(memoryStore, {
         ...applicationPayload,
         name: 'DeleteMe'
       })

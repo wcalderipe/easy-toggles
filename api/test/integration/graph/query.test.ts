@@ -2,6 +2,7 @@ import { OK } from 'http-status'
 import { app } from '../../../src/app'
 import { Application } from '../../../src/domain/type'
 import { saveApplication } from '../../../src/repository'
+import { store as memoryStore } from '../../../src/store/memory'
 import { graphqlRequest } from '../setup'
 import { expectApplicationNotFound } from './helper'
 
@@ -33,7 +34,7 @@ describe('query', () => {
       }
     `
     test('returns the full application', async () => {
-      const application: Application = await saveApplication({
+      const application: Application = await saveApplication(memoryStore, {
         ...applicationPayload,
         name: 'BarApp'
       })
@@ -72,7 +73,7 @@ describe('query', () => {
     `
 
     test('evaluates toggles for the given context input', async () => {
-      const { id }: Application = await saveApplication({
+      const { id }: Application = await saveApplication(memoryStore, {
         ...applicationPayload,
         name: 'BarApp'
       })

@@ -1,12 +1,9 @@
+import { curry } from 'ramda'
 import { ApplicationNotFound } from './domain/error'
 import { Application } from './domain/type'
-import { store as memoryStore } from './store/memory'
 import { Store } from './store/type'
 
-const findApplicationById = async (
-  id: string,
-  store: Store = memoryStore
-): Promise<Application> => {
+const findApplicationById = curry(async (store: Store, id: string) => {
   const results = await store.find({ id })
 
   if (results.length === 0) {
@@ -14,39 +11,26 @@ const findApplicationById = async (
   }
 
   return results[0] as Application
-}
+})
 
-const saveApplication = async (
-  application: Application,
-  store: Store = memoryStore
-): Promise<Application> => {
-  return (await store.save(application)) as Application
-}
+const saveApplication = curry(
+  async (store: Store, application: Application): Promise<Application> => await store.save(application)
+)
 
-const deleteApplicationById = async (
-  id: string,
-  store: Store = memoryStore
-): Promise<boolean> => {
-  const isDeleted: boolean = await store.destroy({ id })
+const deleteApplicationById = curry(
+  async (store: Store, id: string): Promise<boolean> => {
+    const isDeleted: boolean = await store.destroy({ id })
 
-  if (!isDeleted) {
-    throw new ApplicationNotFound()
+    if (!isDeleted) {
+      throw new ApplicationNotFound()
+    }
+
+    return true
   }
+)
 
-  return true
-}
+const updateApplicationById = curry(
+  async (store: Store, id: string, data: Partial<Application>): Promise<Application> => await store.update({ id }, data)
+)
 
-const updateApplicationById = async (
-  id: string,
-  data: Partial<Application>,
-  store: Store = memoryStore
-): Promise<Application> => {
-  return await store.update({ id }, data)
-}
-
-export {
-  deleteApplicationById,
-  findApplicationById,
-  saveApplication,
-  updateApplicationById
-}
+export { deleteApplicationById, findApplicationById, saveApplication, updateApplicationById }
