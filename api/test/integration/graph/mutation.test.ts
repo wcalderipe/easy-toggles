@@ -1,18 +1,11 @@
 import { OK } from 'http-status'
-import { app } from '../../src/app'
-import { Application } from '../../src/domain/type'
-import { saveApplication } from '../../src/repository'
-import { graphqlRequest } from './setup'
+import { app } from '../../../src/app'
+import { Application } from '../../../src/domain/type'
+import { saveApplication } from '../../../src/repository'
+import { graphqlRequest } from '../setup'
+import { expectApplicationNotFound } from './helper'
 
-const expectApplicationNotFound = ({ status, body }) => {
-  expect(status).toEqual(OK)
-  expect(body.errors).toHaveLength(1)
-  expect(body.errors[0]).toMatchObject({
-    message: `Could not resolve to an Application with ID 'you-will-never-find-me'.`
-  })
-}
-
-describe('application', () => {
+describe('mutation', () => {
   const applicationPayload = {
     features: [
       {
@@ -23,49 +16,7 @@ describe('application', () => {
     name: 'FooApp'
   }
 
-  describe('query application', () => {
-    const buildFindApplicationQuery = (id: string): string => `
-      query application {
-        application(id: "${id}") {
-          id,
-          name,
-          features {
-            name,
-            criterias {
-              name,
-              values
-            }
-          }
-        }
-      }
-    `
-    test('returns the full application', async () => {
-      const application: Application = await saveApplication({
-        ...applicationPayload,
-        name: 'BarApp'
-      })
-      const payload = {
-        query: buildFindApplicationQuery(application.id)
-      }
-
-      const { body, status } = await graphqlRequest(app).send(payload)
-
-      expect(status).toEqual(OK)
-      expect(body).toEqual({ data: { application } })
-    })
-
-    test('returns application not found error', async () => {
-      const payload = {
-        query: buildFindApplicationQuery('you-will-never-find-me')
-      }
-
-      const { body, status } = await graphqlRequest(app).send(payload)
-
-      expectApplicationNotFound({ body, status })
-    })
-  })
-
-  describe('mutation createApplication', () => {
+  describe('createApplication', () => {
     test('creates a new application', async () => {
       const expectId = /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/g
       const payload = {
@@ -119,7 +70,7 @@ describe('application', () => {
     })
   })
 
-  describe('mutation updateApplication', () => {
+  describe('updateApplication', () => {
     const buildUpdateApplicationMutation = (id: string): string => `
       mutation updateApplication {
         updateApplication(id: "${id}", input: {
@@ -188,7 +139,7 @@ describe('application', () => {
     })
   })
 
-  describe('mutation deleteApplication', () => {
+  describe('deleteApplication', () => {
     const buildDeleteApplicationMutation = (id: string): string => `
       mutation deleteApplication {
         deleteApplication(id: "${id}")

@@ -18,6 +18,7 @@ export interface Context {
   [key: string]: string
 }
 
-export interface Toggles {
-  [key: string]: boolean
+export interface Toggle {
+  name: string
+  isActive: boolean
 }

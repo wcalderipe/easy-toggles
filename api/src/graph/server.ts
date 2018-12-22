@@ -10,7 +10,8 @@ interface Context {
 const buildGraphServer = (store: Store): ApolloServer => {
   const resolvers: IResolvers = {
     Query: {
-      application: resolver.application
+      application: resolver.application,
+      toggle: resolver.toggle
     },
     Mutation: {
       createApplication: resolver.createApplication,

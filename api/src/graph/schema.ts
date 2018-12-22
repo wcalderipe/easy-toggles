@@ -18,8 +18,9 @@ const typeDefs: DocumentNode = gql`
     values: [String!]!
   }
 
-  type Query {
-    application(id: ID!): Application
+  type Toggle {
+    name: String!
+    isActive: Boolean!
   }
 
   input CreateApplicationInput {
@@ -50,6 +51,16 @@ const typeDefs: DocumentNode = gql`
   input UpdateCriteriaInput {
     name: String!
     values: [String]!
+  }
+
+  input ContextInput {
+    name: String!
+    value: String!
+  }
+
+  type Query {
+    application(id: ID!): Application
+    toggle(applicationId: ID!, context: [ContextInput!]!): [Toggle]
   }
 
   type Mutation {

@@ -1,15 +1,15 @@
 import { toggles } from '../../../src/domain/toggles'
-import { Context, Feature, Toggles } from '../../../src/domain/type'
+import { Context, Feature, Toggle } from '../../../src/domain/type'
 
 describe('toggles', () => {
   const features: Feature[] = [
     {
       criterias: [{ name: 'country', values: ['BR', 'CL'] }],
-      name: 'newLoginForm'
+      name: 'foo'
     },
     {
       criterias: [{ name: 'country', values: ['AR'] }],
-      name: 'requireSomething'
+      name: 'bar'
     }
   ]
   const context: Context = {
@@ -17,10 +17,7 @@ describe('toggles', () => {
   }
 
   test('returns toggles after evaluate a collection of features', () => {
-    const expectedToggles: Toggles = {
-      newLoginForm: true,
-      requireSomething: false
-    }
+    const expectedToggles: Toggle[] = [{ name: 'foo', isActive: true }, { name: 'bar', isActive: false }]
 
     expect(toggles(features, context)).toEqual(expectedToggles)
   })
