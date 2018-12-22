@@ -45,7 +45,7 @@ open http://127.0.0.1:3000/graphql
 | Query       | Mutation          |
 | ----------- | ----------------- |
 | application | createApplication |
-|             | updateApplication |
+| toggle      | updateApplication |
 |             | deleteApplication |
 
 > ⚠️ at the moment, updateApplication mutation can only update the whole Application structure like a PUT in RESTful.
