@@ -3,15 +3,17 @@ import { ApplicationNotFound } from './domain/error'
 import { Application } from './domain/type'
 import { Store } from './store/type'
 
-const findApplicationById = curry(async (store: Store, id: string) => {
-  const results = await store.find({ id })
+const findApplicationById = curry(
+  async (store: Store, id: string): Promise<Application> => {
+    const results = await store.find({ id })
 
-  if (results.length === 0) {
-    throw new ApplicationNotFound()
+    if (results.length === 0) {
+      throw new ApplicationNotFound()
+    }
+
+    return results[0] as Application
   }
-
-  return results[0] as Application
-})
+)
 
 const saveApplication = curry(
   async (store: Store, application: Application): Promise<Application> => await store.save(application)

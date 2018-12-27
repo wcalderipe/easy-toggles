@@ -1,11 +1,15 @@
 import { ApolloServer, IResolvers } from 'apollo-server-koa'
-// import { Repository } from '../repository'
+import { Application } from '../domain/type'
+import { deleteApplicationById, findApplicationById, saveApplication, updateApplicationById } from '../repository'
 import { Store } from '../store/type'
 import * as resolver from './resolver'
 import { typeDefs } from './schema'
 
 interface Context {
-  store: Store
+  deleteApplicationById: (id: string) => Promise<boolean>
+  findApplicationById: (id: string) => Promise<Application>
+  saveApplication: (application: Application) => Promise<Application>
+  updateApplicationById: (id: string, data: Partial<Application>) => Promise<Application>
 }
 
 const buildGraphServer = (store: Store): ApolloServer => {
@@ -22,7 +26,10 @@ const buildGraphServer = (store: Store): ApolloServer => {
   }
 
   const context = (): Context => ({
-    store
+    deleteApplicationById: deleteApplicationById(store),
+    findApplicationById: findApplicationById(store),
+    saveApplication: saveApplication(store),
+    updateApplicationById: updateApplicationById(store)
   })
 
   const server: ApolloServer = new ApolloServer({

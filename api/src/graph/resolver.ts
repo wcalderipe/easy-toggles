@@ -2,39 +2,57 @@ import { ApolloError } from 'apollo-server-koa'
 import { fromPairs, map, pipe } from 'ramda'
 import { toggles } from '../domain/toggles'
 import { Application, Context as GivenContext, Toggle } from '../domain/type'
-import { deleteApplicationById, findApplicationById, saveApplication, updateApplicationById } from '../repository'
 import { Context as ResolverContext } from './server'
 
-const application = async (source: any, { id }: any, { store }: ResolverContext): Promise<Application> => {
+const application = async (
+  source: any,
+  { id }: any,
+  { findApplicationById }: ResolverContext
+): Promise<Application> => {
   try {
-    return await findApplicationById(store, id)
+    return await findApplicationById(id)
   } catch (err) {
     throw buildNotFoundError(id)
   }
 }
 
-const deleteApplication = async (source: any, { id }: any, { store }: ResolverContext): Promise<boolean> => {
+const deleteApplication = async (
+  source: any,
+  { id }: any,
+  { deleteApplicationById }: ResolverContext
+): Promise<boolean> => {
   try {
-    return await deleteApplicationById(store, id)
+    return await deleteApplicationById(id)
   } catch (err) {
     throw buildNotFoundError(id)
   }
 }
 
-const createApplication = async (source: any, { input }: any, { store }: ResolverContext): Promise<Application> =>
-  await saveApplication(store, input)
+const createApplication = async (
+  source: any,
+  { input }: any,
+  { saveApplication }: ResolverContext
+): Promise<Application> => await saveApplication(input)
 
-const updateApplication = async (source: any, { id, input }: any, { store }: ResolverContext): Promise<Application> => {
+const updateApplication = async (
+  source: any,
+  { id, input }: any,
+  { updateApplicationById }: ResolverContext
+): Promise<Application> => {
   try {
-    return await updateApplicationById(store, id, input)
+    return await updateApplicationById(id, input)
   } catch (err) {
     throw buildNotFoundError(id)
   }
 }
 
-const toggle = async (source: any, { applicationId, context }: any, { store }: ResolverContext): Promise<Toggle[]> => {
+const toggle = async (
+  source: any,
+  { applicationId, context }: any,
+  { findApplicationById }: ResolverContext
+): Promise<Toggle[]> => {
   try {
-    const { features }: Application = await findApplicationById(store, applicationId)
+    const { features }: Application = await findApplicationById(applicationId)
 
     return toggles(features, transformContext(context))
   } catch (err) {
