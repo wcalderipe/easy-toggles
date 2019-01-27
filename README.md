@@ -9,6 +9,9 @@
 |-- api
 |   |-- README.md
 |   `-- package.json
+|-- cli
+|   |-- README.md
+|   `-- package.json
 |-- client
 |   |-- README.md
 |   `-- package.json

@@ -1,4 +1,8 @@
-api/node_modules/
 api/dist/
+api/node_modules/
+
+cli/dist/
+cli/node_modules/
+
 .DS_Store
 .vscode/
