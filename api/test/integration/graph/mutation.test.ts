@@ -72,7 +72,7 @@ describe('mutation', () => {
   })
 
   describe('updateApplication', () => {
-    const buildUpdateApplicationMutation = (id: string): string => `
+    const buildUpdateApplicationMutation = (id: string | undefined): string => `
       mutation updateApplication {
         updateApplication(id: "${id}", input: {
           name: "I WAS UPDATED",
@@ -141,7 +141,7 @@ describe('mutation', () => {
   })
 
   describe('deleteApplication', () => {
-    const buildDeleteApplicationMutation = (id: string): string => `
+    const buildDeleteApplicationMutation = (id: string | undefined): string => `
       mutation deleteApplication {
         deleteApplication(id: "${id}")
       }

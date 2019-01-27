@@ -18,14 +18,16 @@ describe('query', () => {
   }
 
   describe('application', () => {
-    const buildFindApplicationQuery = (id: string): string => `
+    const buildFindApplicationQuery = (id: string | undefined): string => `
       query application {
         application(id: "${id}") {
           id,
           name,
           features {
+            id,
             name,
             criterias {
+              id,
               name,
               values
             }
@@ -60,7 +62,7 @@ describe('query', () => {
   })
 
   describe('toggle', () => {
-    const buildToggleQuery = (applicationId: string): string => `
+    const buildToggleQuery = (applicationId: string | undefined): string => `
       query evaluate {
         toggle(
           applicationId: "${applicationId}"

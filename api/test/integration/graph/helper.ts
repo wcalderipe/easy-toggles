@@ -1,6 +1,6 @@
 import { OK } from 'http-status'
 
-const expectApplicationNotFound = ({ status, body }) => {
+const expectApplicationNotFound = ({ status, body }: { status: number; body: any }) => {
   expect(status).toEqual(OK)
   expect(body.errors).toHaveLength(1)
   expect(body.errors[0]).toMatchObject({

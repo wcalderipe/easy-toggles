@@ -1,5 +1,4 @@
 import { INTERNAL_SERVER_ERROR } from 'http-status'
-import { Context } from 'koa'
 import * as Router from 'koa-router'
 import { buildApp } from '../../src/app'
 import { ApiError } from '../../src/domain/error'

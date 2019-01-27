@@ -32,7 +32,7 @@ describe('evaluate', () => {
       name: 'fooFeature'
     }
 
-    test("returns false when context don't match all criterias", () => {
+    test(`returns false when context don't match all criterias`, () => {
       const context: Context = {
         fruit: 'apple',
         vegetable: 'garlic'

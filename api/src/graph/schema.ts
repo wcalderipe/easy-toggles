@@ -9,11 +9,13 @@ const typeDefs: DocumentNode = gql`
   }
 
   type Feature {
+    id: ID!
     name: String!
     criterias: [Criteria!]!
   }
 
   type Criteria {
+    id: ID!
     name: String!
     values: [String!]!
   }

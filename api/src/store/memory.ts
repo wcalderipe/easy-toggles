@@ -1,7 +1,6 @@
 import * as Loki from 'lokijs'
 import { omit } from 'ramda'
 import { Document, Query, Store } from './type'
-import { withID } from './withID'
 
 const database = new Loki('')
 const collection = database.addCollection('Application', { indices: ['id'] })
@@ -36,11 +35,9 @@ const find = (query: Query): Promise<any[]> => {
 }
 
 const save = (document: any): Promise<any> => {
-  const documentWithID: Document = withID(document)
+  collection.insert(document)
 
-  collection.insert(documentWithID)
-
-  return Promise.resolve(omitLokiAttributes({ ...documentWithID }))
+  return Promise.resolve(omitLokiAttributes({ ...document }))
 }
 
 const destroy = (query: Query): Promise<boolean> => {

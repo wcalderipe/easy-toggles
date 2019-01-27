@@ -1,5 +1,5 @@
 import { setDocuments, store as memoryStore } from '../../../src/store/memory'
-import { Query } from '../../../src/store/type'
+import { Document, Query } from '../../../src/store/type'
 
 describe('memory store', () => {
   beforeEach(() => {
@@ -35,17 +35,6 @@ describe('memory store', () => {
       const documents = await memoryStore.find({})
 
       expect(documents).toHaveLength(1)
-    })
-
-    test('returns the saved representation with an id as uuid', async () => {
-      const uuidRegEx = /\w{8}-\w{4}-\w{4}-\w{4}-\w{12}/g
-
-      const document = await memoryStore.save({ name: 'foo' })
-
-      expect(document).toMatchObject({
-        id: expect.stringMatching(uuidRegEx),
-        name: 'foo'
-      })
     })
 
     test('omits lokidb attributes', async () => {

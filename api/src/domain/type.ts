@@ -10,6 +10,7 @@ export interface Feature {
 }
 
 export interface Criteria {
+  id?: string
   name: string
   values: string[]
 }
