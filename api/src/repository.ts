@@ -1,7 +1,7 @@
 import { curry, map } from 'ramda'
 import * as uuid from 'uuid/v4'
 import { ApplicationNotFound } from './domain/error'
-import { Application } from './domain/type'
+import { Application, Criteria, Feature } from './domain/type'
 import { Store } from './store/type'
 
 export const fakeStore: Store = {
@@ -58,4 +58,41 @@ export const deleteApplicationById = curry(
 
 export const updateApplicationById = curry(
   async (store: Store, id: string, data: Partial<Application>): Promise<Application> => await store.update({ id }, data)
+)
+
+export interface UpdateApplicationCriteriaParams {
+  applicationId: string
+  criteriaId: string
+  data: Criteria
+}
+
+export const updateApplicationCriteria = curry(
+  async (store: Store, { applicationId, criteriaId, data }: UpdateApplicationCriteriaParams): Promise<Criteria> => {
+    const application: Application = await findApplicationById(store, applicationId)
+
+    // TODO: updateCriteria = data is confusing but necessary to keep consistency in all repository functions (none
+    // of them return Promise<T | undefined>).
+    let updatedCriteria: Criteria = data
+    const updatedApplication: Application = {
+      ...application,
+      features: application.features.map((feature: Feature) => {
+        return {
+          ...feature,
+          criterias: feature.criterias.map((criteria: Criteria) => {
+            if (criteria.id !== criteriaId) {
+              return criteria
+            }
+
+            updatedCriteria = { ...criteria, ...data }
+
+            return { ...updatedCriteria }
+          })
+        }
+      })
+    }
+
+    await updateApplicationById(store, applicationId, updatedApplication)
+
+    return updatedCriteria
+  }
 )

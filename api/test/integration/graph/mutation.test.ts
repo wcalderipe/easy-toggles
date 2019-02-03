@@ -1,4 +1,5 @@
 import { OK } from 'http-status'
+import { path } from 'ramda'
 import { app } from '../../../src/app'
 import { Application } from '../../../src/domain/type'
 import { saveApplication } from '../../../src/repository'
@@ -170,6 +171,54 @@ describe('mutation', () => {
       const { body, status } = await graphqlRequest(app).send(payload)
 
       expectApplicationNotFound({ body, status })
+    })
+  })
+
+  describe('updateApplicationCriteria', () => {
+    const buildUpdateApplicationCriteriaMutation = ({
+      applicationId,
+      criteriaId
+    }: {
+      applicationId: string | undefined
+      criteriaId: string | undefined
+    }): string => `
+      mutation updateCriteria {
+        updateApplicationCriteria(
+          input: {
+            applicationId: "${applicationId}"
+            criteriaId: "${criteriaId}"
+            name: "bar"
+            values: ["bar"]
+          }
+        ) {
+          id
+          name
+          values
+        }
+      }
+    `
+
+    test('updates a single criteria', async () => {
+      const application: Application = await saveApplication(memoryStore, applicationPayload)
+      const applicationId: string = path(['id'], application) as string
+      const criteriaId: string = path(['features', '0', 'criterias', '0', 'id'], application) as string
+
+      const payload = {
+        query: buildUpdateApplicationCriteriaMutation({ applicationId, criteriaId })
+      }
+
+      const { body, status } = await graphqlRequest(app).send(payload)
+
+      expect(status).toEqual(OK)
+      expect(body).toMatchObject({
+        data: {
+          updateApplicationCriteria: {
+            id: criteriaId,
+            name: 'bar',
+            values: ['bar']
+          }
+        }
+      })
     })
   })
 })

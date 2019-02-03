@@ -1,6 +1,13 @@
 import { ApolloServer, IResolvers } from 'apollo-server-koa'
-import { Application } from '../domain/type'
-import { deleteApplicationById, findApplicationById, saveApplication, updateApplicationById } from '../repository'
+import { Application, Criteria } from '../domain/type'
+import {
+  deleteApplicationById,
+  findApplicationById,
+  saveApplication,
+  updateApplicationById,
+  updateApplicationCriteria,
+  UpdateApplicationCriteriaParams
+} from '../repository'
 import { Store } from '../store/type'
 import * as resolver from './resolver'
 import { typeDefs } from './schema'
@@ -10,6 +17,7 @@ interface Context {
   findApplicationById: (id: string) => Promise<Application>
   saveApplication: (application: Application) => Promise<Application>
   updateApplicationById: (id: string, data: Partial<Application>) => Promise<Application>
+  updateApplicationCriteria: (params: UpdateApplicationCriteriaParams) => Promise<Criteria>
 }
 
 const buildGraphServer = (store: Store): ApolloServer => {
@@ -21,6 +29,7 @@ const buildGraphServer = (store: Store): ApolloServer => {
     Mutation: {
       createApplication: resolver.createApplication,
       updateApplication: resolver.updateApplication,
+      updateApplicationCriteria: resolver.updateApplicationCriteria,
       deleteApplication: resolver.deleteApplication
     }
   }
@@ -29,7 +38,8 @@ const buildGraphServer = (store: Store): ApolloServer => {
     deleteApplicationById: deleteApplicationById(store),
     findApplicationById: findApplicationById(store),
     saveApplication: saveApplication(store),
-    updateApplicationById: updateApplicationById(store)
+    updateApplicationById: updateApplicationById(store),
+    updateApplicationCriteria: updateApplicationCriteria(store)
   })
 
   const server: ApolloServer = new ApolloServer({

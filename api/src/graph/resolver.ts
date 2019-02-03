@@ -1,10 +1,10 @@
 import { ApolloError } from 'apollo-server-koa'
 import { fromPairs, map, pipe } from 'ramda'
 import { toggles } from '../domain/toggles'
-import { Application, Context as GivenContext, Toggle } from '../domain/type'
+import { Application, Context as GivenContext, Criteria, Toggle } from '../domain/type'
 import { Context as ResolverContext } from './server'
 
-const application = async (
+export const application = async (
   source: any,
   { id }: any,
   { findApplicationById }: ResolverContext
@@ -16,7 +16,7 @@ const application = async (
   }
 }
 
-const deleteApplication = async (
+export const deleteApplication = async (
   source: any,
   { id }: any,
   { deleteApplicationById }: ResolverContext
@@ -28,13 +28,13 @@ const deleteApplication = async (
   }
 }
 
-const createApplication = async (
+export const createApplication = async (
   source: any,
   { input }: any,
   { saveApplication }: ResolverContext
 ): Promise<Application> => await saveApplication(input)
 
-const updateApplication = async (
+export const updateApplication = async (
   source: any,
   { id, input }: any,
   { updateApplicationById }: ResolverContext
@@ -46,7 +46,26 @@ const updateApplication = async (
   }
 }
 
-const toggle = async (
+export const updateApplicationCriteria = async (
+  source: any,
+  { input }: any,
+  { updateApplicationCriteria }: ResolverContext
+): Promise<Criteria> => {
+  try {
+    const { applicationId, criteriaId, name, values } = input
+
+    return await updateApplicationCriteria({
+      applicationId,
+      criteriaId,
+      data: { name, values }
+    })
+  } catch (err) {
+    // TODO: Besides application not found the function should raise a criteria not found as well
+    throw buildNotFoundError(input.applicationId)
+  }
+}
+
+export const toggle = async (
   source: any,
   { applicationId, context }: any,
   { findApplicationById }: ResolverContext
@@ -82,5 +101,3 @@ const buildNotFoundError = (id: string) =>
   })
 
 const buildError = ({ message, code }: { message: string; code: string }) => new ApolloError(message, code)
-
-export { application, createApplication, deleteApplication, updateApplication, toggle }

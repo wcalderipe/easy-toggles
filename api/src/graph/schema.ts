@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server-koa'
 import { DocumentNode } from 'graphql'
 
-const typeDefs: DocumentNode = gql`
+export const typeDefs: DocumentNode = gql`
   type Application {
     id: ID!
     name: String!
@@ -55,6 +55,13 @@ const typeDefs: DocumentNode = gql`
     values: [String]!
   }
 
+  input UpdateApplicationCriteriaInput {
+    applicationId: ID!
+    criteriaId: ID!
+    name: String!
+    values: [String]!
+  }
+
   input ContextInput {
     name: String!
     value: String!
@@ -68,8 +75,7 @@ const typeDefs: DocumentNode = gql`
   type Mutation {
     createApplication(input: CreateApplicationInput): Application
     updateApplication(id: ID!, input: UpdateApplicationInput): Application
+    updateApplicationCriteria(input: UpdateApplicationCriteriaInput): Criteria
     deleteApplication(id: ID!): Boolean
   }
 `
-
-export { typeDefs }
