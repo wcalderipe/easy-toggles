@@ -1,5 +1,4 @@
 import { path, prop } from 'ramda'
-import { CriteriaNotFound } from '../../src/domain/error'
 import { Application, Criteria } from '../../src/domain/type'
 import { findApplicationById, saveApplication, updateApplicationCriteria } from '../../src/repository'
 import { store as memoryStore } from '../../src/store/memory'
