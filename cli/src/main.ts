@@ -2,6 +2,8 @@ import * as Program from 'commander'
 import { request } from 'graphql-request'
 import * as ui from './ui'
 
+const getApiUrl = () => 'http://127.0.0.1:3000/graphql'
+
 const main = (): void => {
   const parseContext = (val: any, context: any) => {
     const [name, value] = val.split('=')
@@ -35,7 +37,7 @@ const main = (): void => {
         applicationId: application,
         context
       }
-      const response: { toggle: any } = await request('http://127.0.0.1:3000/graphql', query, variables)
+      const response: { toggle: any } = await request(getApiUrl(), query, variables)
 
       ui.toggleEvaluate({ application, toggle: response.toggle })
     })
@@ -62,7 +64,7 @@ const main = (): void => {
       const variables = {
         applicationId: application,
       }
-      const response: any = await request('http://127.0.0.1:3000/graphql', query, variables)
+      const response: any = await request(getApiUrl(), query, variables)
 
       ui.applicationShow({ application: response.application })
     })
@@ -92,7 +94,7 @@ const main = (): void => {
           criteriaId: criteria
         }
       }
-      const response: any = await request('http://127.0.0.1:3000/graphql', query, variables)
+      const response: any = await request(getApiUrl(), query, variables)
 
       ui.criteriaUpdate(response.updateApplicationCriteria)
     })
