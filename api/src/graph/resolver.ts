@@ -1,5 +1,6 @@
 import { ApolloError } from 'apollo-server-koa'
 import { fromPairs, map, pipe } from 'ramda'
+import { ApiError } from '../domain/error'
 import { toggles } from '../domain/toggles'
 import { Application, Context as GivenContext, Criteria, Toggle } from '../domain/type'
 import { Context as ResolverContext } from './server'
@@ -12,7 +13,7 @@ export const application = async (
   try {
     return await findApplicationById(id)
   } catch (err) {
-    throw buildNotFoundError(id)
+    throw buildError(err)
   }
 }
 
@@ -24,7 +25,7 @@ export const deleteApplication = async (
   try {
     return await deleteApplicationById(id)
   } catch (err) {
-    throw buildNotFoundError(id)
+    throw buildError(err)
   }
 }
 
@@ -42,7 +43,7 @@ export const updateApplication = async (
   try {
     return await updateApplicationById(id, input)
   } catch (err) {
-    throw buildNotFoundError(id)
+    throw buildError(err)
   }
 }
 
@@ -60,8 +61,7 @@ export const updateApplicationCriteria = async (
       data: { name, values }
     })
   } catch (err) {
-    // TODO: Besides application not found the function should raise a criteria not found as well
-    throw buildNotFoundError(input.applicationId)
+    throw buildError(err)
   }
 }
 
@@ -75,7 +75,7 @@ export const toggle = async (
 
     return toggles(features, transformContext(context))
   } catch (err) {
-    throw buildNotFoundError(applicationId)
+    throw buildError(err)
   }
 }
 
@@ -94,10 +94,5 @@ const transformContext = (context: InputContext[]): GivenContext => {
   )(context)
 }
 
-const buildNotFoundError = (id: string) =>
-  buildError({
-    message: `Could not resolve to an Application with ID '${id}'.`,
-    code: 'NOT_FOUND'
-  })
-
-const buildError = ({ message, code }: { message: string; code: string }) => new ApolloError(message, code)
+// TODO: Improve error message
+const buildError = ({ code }: ApiError) => new ApolloError(code, code)

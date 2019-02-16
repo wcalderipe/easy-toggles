@@ -2,13 +2,14 @@
 
 import { INTERNAL_SERVER_ERROR, NOT_FOUND } from 'http-status'
 
-enum ErrorCode {
+export enum ErrorCode {
   API_ERROR = 'INTERNAL',
   APPLICATION_NOT_FOUND = 'APPLICATION_NOT_FOUND',
+  CRITERIA_NOT_FOUND = 'CRITERIA_NOT_FOUND',
   GENERIC_ERROR = 'GENERIC'
 }
 
-class ApiError extends Error {
+export class ApiError extends Error {
   public code: string
   public statusCode: number
 
@@ -20,7 +21,7 @@ class ApiError extends Error {
   }
 }
 
-class ApplicationNotFound extends ApiError {
+export class ApplicationNotFound extends ApiError {
   constructor(message?: string) {
     super(message)
 
@@ -29,4 +30,11 @@ class ApplicationNotFound extends ApiError {
   }
 }
 
-export { ApiError, ApplicationNotFound, ErrorCode }
+export class CriteriaNotFound extends ApiError {
+  constructor(message?: string) {
+    super(message)
+
+    this.code = ErrorCode.CRITERIA_NOT_FOUND
+    this.statusCode = NOT_FOUND
+  }
+}

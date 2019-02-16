@@ -1,15 +1,8 @@
 import { curry, map } from 'ramda'
 import * as uuid from 'uuid/v4'
-import { ApplicationNotFound } from './domain/error'
+import { ApplicationNotFound, CriteriaNotFound } from './domain/error'
 import { Application, Criteria, Feature } from './domain/type'
 import { Store } from './store/type'
-
-export const fakeStore: Store = {
-  destroy: (query: any) => Promise.resolve(false),
-  find: (query: any) => Promise.resolve([]),
-  save: (document: any) => Promise.resolve(null),
-  update: (query: any, data: any) => Promise.resolve({})
-}
 
 export const findApplicationById = curry(
   async (store: Store, id: string): Promise<Application> => {
@@ -23,26 +16,9 @@ export const findApplicationById = curry(
   }
 )
 
-// TODO: Receive withIds as an argument and remove the external side-effect
 export const saveApplication = curry(
   async (store: Store, application: Application): Promise<Application> => {
     return await store.save(withIds(withId, application))
-  }
-)
-
-export const withId = <T extends object>(object: T): T & { id: string } => Object.assign(object, { id: uuid() })
-
-export const withIds = curry(
-  (withId: any, application: Application): Application => {
-    return {
-      ...withId(application),
-      features: map((feature) => {
-        return {
-          ...withId(feature),
-          criterias: map((criteria) => withId(criteria), feature.criterias)
-        }
-      }, application.features)
-    }
   }
 )
 
@@ -50,6 +26,7 @@ export const deleteApplicationById = curry(
   async (store: Store, id: string): Promise<boolean> => {
     const isDeleted: boolean = await store.destroy({ id })
 
+    // TODO: Change the error due to the fact that something else could happen
     if (!isDeleted) {
       throw new ApplicationNotFound()
     }
@@ -59,7 +36,13 @@ export const deleteApplicationById = curry(
 )
 
 export const updateApplicationById = curry(
-  async (store: Store, id: string, data: Partial<Application>): Promise<Application> => await store.update({ id }, data)
+  async (store: Store, id: string, data: Partial<Application>): Promise<Application> => {
+    try {
+      return await store.update({ id }, data)
+    } catch (err) {
+      throw new ApplicationNotFound()
+    }
+  }
 )
 
 export interface UpdateApplicationCriteriaParams {
@@ -72,9 +55,7 @@ export const updateApplicationCriteria = curry(
   async (store: Store, { applicationId, criteriaId, data }: UpdateApplicationCriteriaParams): Promise<Criteria> => {
     const application: Application = await findApplicationById(store, applicationId)
 
-    // TODO: updateCriteria = data is confusing but necessary to keep consistency in all repository functions (none
-    // of them return Promise<T | undefined>).
-    let updatedCriteria: Criteria = data
+    let updatedCriteria: Criteria | undefined
     const updatedApplication: Application = {
       ...application,
       features: application.features.map((feature: Feature) => {
@@ -93,8 +74,28 @@ export const updateApplicationCriteria = curry(
       })
     }
 
+    if (!updatedCriteria) {
+      throw new CriteriaNotFound()
+    }
+
     await updateApplicationById(store, applicationId, updatedApplication)
 
     return updatedCriteria
+  }
+)
+
+export const withId = <T extends object>(object: T): T & { id: string } => Object.assign(object, { id: uuid() })
+
+export const withIds = curry(
+  (withId: any, application: Application): Application => {
+    return {
+      ...withId(application),
+      features: map((feature) => {
+        return {
+          ...withId(feature),
+          criterias: map((criteria) => withId(criteria), feature.criterias)
+        }
+      }, application.features)
+    }
   }
 )

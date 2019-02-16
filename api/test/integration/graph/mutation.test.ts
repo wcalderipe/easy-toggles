@@ -5,7 +5,7 @@ import { Application } from '../../../src/domain/type'
 import { saveApplication } from '../../../src/repository'
 import { store as memoryStore } from '../../../src/store/memory'
 import { graphqlRequest } from '../setup'
-import { expectApplicationNotFound } from './helper'
+import { expectErrorResponse } from './helper'
 
 describe('mutation', () => {
   const applicationPayload = {
@@ -134,10 +134,11 @@ describe('mutation', () => {
       const payload = {
         query: buildUpdateApplicationMutation('you-will-never-find-me')
       }
+      const expectedMessage: string = 'APPLICATION_NOT_FOUND'
 
       const { body, status } = await graphqlRequest(app).send(payload)
 
-      expectApplicationNotFound({ body, status })
+      expectErrorResponse({ body, status, expectedMessage })
     })
   })
 
@@ -167,10 +168,11 @@ describe('mutation', () => {
       const payload = {
         query: buildDeleteApplicationMutation('you-will-never-find-me')
       }
+      const expectedMessage: string = 'APPLICATION_NOT_FOUND'
 
       const { body, status } = await graphqlRequest(app).send(payload)
 
-      expectApplicationNotFound({ body, status })
+      expectErrorResponse({ body, status, expectedMessage })
     })
   })
 
@@ -219,6 +221,21 @@ describe('mutation', () => {
           }
         }
       })
+    })
+
+    test('returns criteria not found error', async () => {
+      const application: Application = await saveApplication(memoryStore, applicationPayload)
+      const applicationId: string = path(['id'], application) as string
+      const criteriaId: string = 'you-will-never-find-me'
+      const expectedMessage: string = 'CRITERIA_NOT_FOUND'
+
+      const payload = {
+        query: buildUpdateApplicationCriteriaMutation({ applicationId, criteriaId })
+      }
+
+      const { body, status } = await graphqlRequest(app).send(payload)
+
+      expectErrorResponse({ body, status, expectedMessage })
     })
   })
 })

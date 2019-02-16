@@ -4,7 +4,7 @@ import { Application } from '../../../src/domain/type'
 import { saveApplication } from '../../../src/repository'
 import { store as memoryStore } from '../../../src/store/memory'
 import { graphqlRequest } from '../setup'
-import { expectApplicationNotFound } from './helper'
+import { expectErrorResponse } from './helper'
 
 describe('query', () => {
   const applicationPayload = {
@@ -54,10 +54,11 @@ describe('query', () => {
       const payload = {
         query: buildFindApplicationQuery('you-will-never-find-me')
       }
+      const expectedMessage: string = 'APPLICATION_NOT_FOUND'
 
       const { body, status } = await graphqlRequest(app).send(payload)
 
-      expectApplicationNotFound({ body, status })
+      expectErrorResponse({ body, status, expectedMessage })
     })
   })
 
@@ -93,10 +94,11 @@ describe('query', () => {
       const payload = {
         query: buildToggleQuery('you-will-never-find-me')
       }
+      const expectedMessage: string = 'APPLICATION_NOT_FOUND'
 
       const { body, status } = await graphqlRequest(app).send(payload)
 
-      expectApplicationNotFound({ body, status })
+      expectErrorResponse({ body, status, expectedMessage })
     })
   })
 })
