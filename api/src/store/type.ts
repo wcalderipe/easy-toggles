@@ -8,8 +8,3 @@ export interface Store {
 export interface Query {
   [key: string]: string
 }
-
-export interface Document {
-  id: string
-  [key: string]: any
-}

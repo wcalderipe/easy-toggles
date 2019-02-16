@@ -1,5 +1,5 @@
 import { setDocuments, store as memoryStore } from '../../../src/store/memory'
-import { Document, Query } from '../../../src/store/type'
+import { Query } from '../../../src/store/type'
 
 describe('memory store', () => {
   beforeEach(() => {
@@ -84,7 +84,7 @@ describe('memory store', () => {
       const query: Query = { color: 'red' }
       const data: any = { color: 'yellow' }
 
-      const document: Document = await memoryStore.update(query, data)
+      const document: any = await memoryStore.update(query, data)
 
       expect(document).not.toHaveProperty('meta')
       expect(document).not.toHaveProperty('$loki')

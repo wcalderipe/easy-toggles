@@ -5,6 +5,7 @@ export interface Application {
 }
 
 export interface Feature {
+  id?: string
   name: string
   criterias: Criteria[]
 }

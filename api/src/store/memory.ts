@@ -1,10 +1,10 @@
 import * as Loki from 'lokijs'
 import { omit } from 'ramda'
-import { Document, Query, Store } from './type'
+import { Query, Store } from './type'
 
 const database = new Loki('')
 const collection = database.addCollection('Application', { indices: ['id'] })
-const documents: Document[] = [
+const documents: any[] = [
   {
     features: [
       {
@@ -23,7 +23,7 @@ const documents: Document[] = [
 
 collection.insert(documents)
 
-const setDocuments = (docs: Document[]): void => {
+const setDocuments = (docs: any[]): void => {
   collection.clear()
   collection.insert(docs)
 }
@@ -41,7 +41,7 @@ const save = (document: any): Promise<any> => {
 }
 
 const destroy = (query: Query): Promise<boolean> => {
-  const document: Document | null = collection.findOne(query)
+  const document: any | null = collection.findOne(query)
 
   if (!document) {
     return Promise.resolve(false)
@@ -54,8 +54,8 @@ const destroy = (query: Query): Promise<boolean> => {
 
 const update = (query: Query, data: any): Promise<any> => {
   // TODO: Handle not found documents
-  const document: Document | null = collection.findOne(query)
-  const updatedDocument: Document = {
+  const document: any | null = collection.findOne(query)
+  const updatedDocument: any = {
     ...document,
     ...data
   }

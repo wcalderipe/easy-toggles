@@ -25,10 +25,12 @@ export const findApplicationById = curry(
 
 // TODO: Receive withIds as an argument and remove the external side-effect
 export const saveApplication = curry(
-  async (store: Store, application: Application): Promise<Application> => await store.save(withIds(withId, application))
+  async (store: Store, application: Application): Promise<Application> => {
+    return await store.save(withIds(withId, application))
+  }
 )
 
-export const withId = <T>(object: T): T => Object.assign(object, { id: uuid() })
+export const withId = <T extends object>(object: T): T & { id: string } => Object.assign(object, { id: uuid() })
 
 export const withIds = curry(
   (withId: any, application: Application): Application => {

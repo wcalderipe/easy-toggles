@@ -12,15 +12,15 @@ import { Store } from '../store/type'
 import * as resolver from './resolver'
 import { typeDefs } from './schema'
 
-interface Context {
+export interface Context {
   deleteApplicationById: (id: string) => Promise<boolean>
   findApplicationById: (id: string) => Promise<Application>
   saveApplication: (application: Application) => Promise<Application>
-  updateApplicationById: (id: string, data: Partial<Application>) => Promise<Application>
+  updateApplicationById: (id: string, data: Application) => Promise<Application>
   updateApplicationCriteria: (params: UpdateApplicationCriteriaParams) => Promise<Criteria>
 }
 
-const buildGraphServer = (store: Store): ApolloServer => {
+export const buildGraphServer = (store: Store): ApolloServer => {
   const resolvers: IResolvers = {
     Query: {
       application: resolver.application,
@@ -50,5 +50,3 @@ const buildGraphServer = (store: Store): ApolloServer => {
 
   return server
 }
-
-export { buildGraphServer, Context }
