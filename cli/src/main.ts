@@ -12,9 +12,11 @@ const main = (): void => {
     ]
   }
 
+  const parseList = (val: any) => val.split(',')
+
   Program
     .command('toggle:evaluate')
-    .option('-c, --context <context>', 'Context variable', parseContext, [])
+    .option('-c, --context <key=value>', 'Context variable', parseContext, [])
     .option('-a, --application <application>', 'Application ID')
     .action(async (cmd) => {
       const { application, context } = cmd
@@ -40,7 +42,7 @@ const main = (): void => {
 
   Program
     .command('application:show')
-    .option('-a, --application <application>', 'Application ID')
+    .option('-a, --application <foo>', 'Application ID')
     .action(async (cmd) => {
       const { application } = cmd
       const query = `
@@ -65,6 +67,35 @@ const main = (): void => {
       ui.applicationShow({ application: response.application })
     })
 
+  Program
+    .command('criteria:update')
+    .option('-a, --application <foo>', 'Application ID')
+    .option('-c, --criteria <foo>', 'Criteria ID')
+    .option('-n, --name <foo>', 'Criteria name')
+    .option('-v, --values <foo,bar,baz>', 'Criteria values', parseList)
+    .action(async (cmd) => {
+      const { application, criteria, name, values } = cmd
+      const query = `
+        mutation updateCriteria($input: UpdateApplicationCriteriaInput) {
+          updateApplicationCriteria(input: $input) {
+            id
+            name
+            values
+          }
+        }
+      `
+      const variables = {
+        input: {
+          name,
+          values,
+          applicationId: application,
+          criteriaId: criteria
+        }
+      }
+      const response: any = await request('http://127.0.0.1:3000/graphql', query, variables)
+
+      ui.criteriaUpdate(response.updateApplicationCriteria)
+    })
 
   Program
     .parse(process.argv)
