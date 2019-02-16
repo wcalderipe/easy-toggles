@@ -1,5 +1,5 @@
 import { ApolloError } from 'apollo-server-koa'
-import { fromPairs, map, pipe } from 'ramda'
+import { dissoc, fromPairs, map, pipe } from 'ramda'
 import { ApiError } from '../domain/error'
 import { toggles } from '../domain/toggles'
 import { Application, Context as GivenContext, Criteria, Toggle } from '../domain/type'
@@ -37,11 +37,14 @@ export const createApplication = async (
 
 export const updateApplication = async (
   source: any,
-  { id, input }: any,
+  { input }: any,
   { updateApplicationById }: ResolverContext
 ): Promise<Application> => {
   try {
-    return await updateApplicationById(id, input)
+    const { applicationId } = input
+    const data: any = dissoc('applicationId', input)
+
+    return await updateApplicationById(applicationId, data)
   } catch (err) {
     throw buildError(err)
   }

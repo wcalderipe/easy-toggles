@@ -41,6 +41,7 @@ export const typeDefs: DocumentNode = gql`
   }
 
   input UpdateApplicationInput {
+    applicationId: ID!
     name: String!
     features: [UpdateFeatureInput]!
   }
@@ -74,7 +75,7 @@ export const typeDefs: DocumentNode = gql`
 
   type Mutation {
     createApplication(input: CreateApplicationInput): Application
-    updateApplication(id: ID!, input: UpdateApplicationInput): Application
+    updateApplication(input: UpdateApplicationInput): Application
     updateApplicationCriteria(input: UpdateApplicationCriteriaInput): Criteria
     deleteApplication(id: ID!): Boolean
   }

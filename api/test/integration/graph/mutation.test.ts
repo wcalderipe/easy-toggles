@@ -75,26 +75,27 @@ describe('mutation', () => {
   describe('updateApplication', () => {
     const buildUpdateApplicationMutation = (id: string | undefined): string => `
       mutation updateApplication {
-        updateApplication(id: "${id}", input: {
-          name: "I WAS UPDATED",
+        updateApplication(input: {
+          applicationId: "${id}"
+          name: "I WAS UPDATED"
           features: [
             {
-              name: "foo",
+              name: "foo"
               criterias: [
                 {
-                  name: "country",
+                  name: "country"
                   values: ["AU"]
                 }
               ]
             }
           ]
         }) {
-          id,
-          name,
+          id
+          name
           features {
-            name,
+            name
             criterias {
-              name,
+              name
               values
             }
           }
